@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NWIS Model Output Schema",
+  "description": "Standard schema for individual model outputs in the NWIS intelligence layer.",
+  "type": "object",
+  "required": [
+    "model_name",
+    "model_version",
+    "timestamp",
+    "well_id",
+    "data_origin",
+    "status"
+  ],
+  "properties": {
+    "model_name": {
+      "type": "string",
+      "description": "Unique identifier for the model (e.g., 'anomaly_isolation_forest')."
+    },
+    "model_version": {
+      "type": "string",
+      "description": "Version of the model running."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of the processed record."
+    },
+    "well_id": {
+      "type": "string",
+      "description": "Canonical identifier for the well, preserved exactly from the upstream source."
+    },
+    "data_origin": {
+      "type": "string",
+      "enum": ["HISTORICAL_SOURCE", "SYNTHETIC_DEMO", "LIVE_TELEMETRY"],
+      "description": "Provenance of the telemetry being scored. Models must not mix origins in memory."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["SUCCESS", "INSUFFICIENT_DATA", "LOW_COVERAGE", "UNAVAILABLE", "ERROR"],
+      "description": "Execution status of the model for this record."
+    },
+    "score": {
+      "type": ["number", "null"],
+      "description": "The primary numeric score produced by the model (e.g., anomaly score, deviation, distance)."
+    },
+    "label": {
+      "type": ["string", "null"],
+      "description": "A categorized string label (e.g., 'ANOMALOUS', 'NORMAL', 'STATE_0'). Must not be a physical event name."
+    },
+    "confidence": {
+      "type": ["number", "null"],
+      "description": "Confidence of the model's prediction [0.0 - 1.0]. Reduced by low feature coverage."
+    },
+    "feature_coverage": {
+      "type": ["number", "null"],
+      "description": "The fraction of the required features that were available and valid for this prediction [0.0 - 1.0]."
+    },
+    "evidence": {
+      "type": ["array", "null"],
+      "description": "Machine-readable evidence explaining the model result.",
+      "items": {
+        "type": "object",
+        "required": ["feature", "contribution"],
+        "properties": {
+          "feature": {
+            "type": "string",
+            "description": "Name of the feature from the fixed registry."
+          },
+          "contribution": {
+            "type": "number",
+            "description": "Fractional contribution or relative distance metric indicating why this feature is cited."
+          },
+          "direction": {
+            "type": "string",
+            "description": "Optional string describing the feature deviation (e.g., 'HIGH', 'LOW', 'ABNORMAL')."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "source_row_index": {
+      "type": ["integer", "null"],
+      "description": "Optional index tracing back to the raw CSV/telemetry row, if available."
+    }
+  },
+  "additionalProperties": false
+}

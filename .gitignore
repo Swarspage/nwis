@@ -23,6 +23,7 @@ ENV/
 # Data artifacts (processed data generated during processing/runs)
 data/processed/*
 !data/processed/.gitkeep
+!data/processed/*_sample.jsonl
 
 # Build and distribution outputs
 dist/

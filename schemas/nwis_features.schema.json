@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nwis.internal/schemas/features/0.1.0",
+  "title": "NWIS Feature Record",
+  "description": "Version 0.1.0 feature record schema. Each record contains derived features computed from one NWIS canonical telemetry record plus its time-windowed context. Features are computed only from data at or before the record timestamp (no look-ahead). Units are unverified unless explicitly stated.",
+  "version": "0.1.0",
+  "type": "object",
+  "required": [
+    "feature_version",
+    "timestamp",
+    "well_id",
+    "source_row_index",
+    "data_origin",
+    "telemetry_status",
+    "quality_features",
+    "signal_features",
+    "state_features",
+    "relationship_features"
+  ],
+  "properties": {
+    "feature_version": {
+      "type": "string",
+      "description": "Feature engineering version. Bump when feature definitions change.",
+      "const": "0.1.0"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC timestamp. Inherited from canonical record."
+    },
+    "well_id": {
+      "type": "string",
+      "description": "NWIS internal well identifier. Preserved from canonical record.",
+      "minLength": 1
+    },
+    "source_row_index": {
+      "type": ["integer", "null"],
+      "description": "Row index from original source. Preserved for full traceability.",
+      "minimum": 0
+    },
+    "data_origin": {
+      "type": "string",
+      "enum": ["HISTORICAL_SOURCE", "SYNTHETIC_DEMO", "FUTURE_LIVE_SOURCE"],
+      "description": "Provenance class. Preserved from canonical record."
+    },
+    "telemetry_status": {
+      "type": "string",
+      "enum": ["VALID", "SOURCE_GAP", "PARTIAL", "EMPTY", "DATA_ARTIFACT"],
+      "description": "Record-level telemetry status. Preserved from canonical record."
+    },
+    "quality_features": {
+      "type": "object",
+      "description": "Data quality and telemetry health features."
+    },
+    "signal_features": {
+      "type": "object",
+      "description": "Per-channel signal features: current value, rolling statistics, deltas."
+    },
+    "state_features": {
+      "type": "object",
+      "description": "Observable signal state indicators. NOT physical-event labels."
+    },
+    "relationship_features": {
+      "type": "object",
+      "description": "Cross-channel relationship features. Statistical associations only. Not causal claims."
+    }
+  },
+  "additionalProperties": false,
+
+  "$defs": {
+    "NullableNumber": {
+      "type": ["number", "null"],
+      "description": "A numeric feature value that may be null if the input was missing or insufficient data existed for computation. NaN must not be used — use null."
+    }
+  },
+
+  "_window_definitions": {
+    "short_window_seconds": 60,
+    "medium_window_seconds": 300,
+    "long_window_seconds": 1800,
+    "rationale": "Windows are defined in seconds (not row counts) because the WELL-1 dataset has variable sampling intervals (median ~4.9s) and contains a ~29,493-second telemetry gap. Row-count windows would erroneously span across sparse intervals. min_periods=1 is used to avoid discarding early rows, but features computed from very few observations are labelled with a coverage note.",
+    "gap_threshold_seconds": 300,
+    "gap_threshold_rationale": "A time delta of >300 seconds between consecutive records is treated as an abnormal interval. This threshold is 5x the dataset's p99 inter-sample interval. It is a heuristic and not a physical definition of a gap."
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "_meta": {
+    "description": "Explicit source-channel-to-canonical-field mapping for WELL-1 (VLOVE telemetry system).",
+    "schema_version": "0.1.0",
+    "source_system": "VLOVE",
+    "source_well_id": "WELL-1",
+    "nwis_well_id": "WELL-1-VLOVE",
+    "data_origin": "HISTORICAL_SOURCE",
+    "created_at": "2026-09-01",
+    "basis": "M0.1 forensic audit and M0.2 validated channel-behavior analysis.",
+    "WARNING": "Unit mappings are UNKNOWN unless explicitly marked VERIFIED. Physical meaning of channels has not been independently confirmed from VLOVE channel documentation."
+  },
+
+  "mappings": [
+    {
+      "canonical_field": "depth",
+      "source_channel": null,
+      "mapping_status": "UNMAPPED",
+      "rationale": "No verified continuously varying depth channel exists in this WELL-1 dataset window. GS_DBTM has only 5 unique values across 10,000 rows and is largely static (median constant run ~7,324 seconds). GS_DMEA and GS_DVER are functionally constant at 2591.06 m and 2439.50 m respectively. DBTM, DMEA, DEPT, and SRVDEPTH are 100% missing. Canonical depth is left null until a validated depth channel is confirmed from source documentation.",
+      "depth_candidate": {
+        "source_channel": "GS_DBTM",
+        "candidate_status": "UNVERIFIED_CANDIDATE",
+        "candidate_rationale": "GS_DBTM spans 1.82 to 2557.82 (range ~2556 units), is 99.99% populated, and steps 5 times across the dataset. It CANNOT be treated as continuously varying drilling depth in this window. May represent a discrete BHA/survey depth reference or a near-static tool depth register. Requires VLOVE channel documentation to resolve.",
+        "unit": null,
+        "unit_status": "UNKNOWN"
+      }
+    },
+    {
+      "canonical_field": "rate_of_penetration",
+      "source_channel": "GS_ROP",
+      "mapping_status": "MAPPED_CONSTANT",
+      "rationale": "Present in source, 99.97% populated. Functionally constant at 10.26 (0 meaningful changes across window). Mapped for completeness but flagged CONSTANT_WINDOW.",
+      "unit": null,
+      "unit_status": "UNKNOWN",
+      "quality_default": "CONSTANT_WINDOW"
+    },
+    {
+      "canonical_field": "weight_on_bit",
+      "source_channel": "GS_SWOB",
+      "mapping_status": "MAPPED_CONSTANT",
+      "rationale": "Present in source, 99.97% populated. Functionally constant at 0.0 across entire window. A zero weight_on_bit is physically plausible (pipe suspended, not drilling). Zero must NOT be treated as missing.",
+      "unit": null,
+      "unit_status": "UNKNOWN",
+      "quality_default": "ZERO"
+    },
+    {
+      "canonical_field": "rotary_speed",
+      "source_channel": "GS_RPM",
+      "mapping_status": "MAPPED",
+      "rationale": "Present in source, 99.89% populated. 5 unique values (0, 5, 10, 15, 25). 19 exact changes. Behaves consistently with a surface rotation sensor with discrete setpoints or slow variation.",
+      "unit": null,
+      "unit_status": "UNKNOWN",
+      "quality_default": "UNVERIFIED"
+    },
+    {
+      "canonical_field": "torque",
+      "source_channel": "GS_TQA",
+      "mapping_status": "MAPPED",
+      "rationale": "Present in source, 95.84% populated. 116 unique values. 1,634 exact changes. Dynamic behavior. NOTE: contains negative values (10.98% of records). Physical plausibility of negative torque cannot be confirmed without VLOVE documentation — flagged as requiring validation.",
+      "unit": null,
+      "unit_status": "UNKNOWN",
+      "quality_default": "UNVERIFIED",
+      "notes": "Negative values observed. Cannot determine if this represents a valid sensor output (e.g. reactive torque convention) or an artifact without VLOVE channel documentation."
+    },
+    {
+      "canonical_field": "standpipe_pressure",
+      "source_channel": "GS_SPPA",
+      "mapping_status": "MAPPED",
+      "rationale": "Present in source, 99.97% populated. 643 unique values. 9,092 exact changes. Highest change count of all core channels. Dynamic continuous behavior. NOTE: contains negative values (45.22% of records, p01 = -237). Physical plausibility of near-half-population negative pressure is highly suspicious. Could indicate a sensor offset, differential pressure measurement, or data artifact. Cannot be resolved without VLOVE documentation.",
+      "unit": null,
+      "unit_status": "UNKNOWN",
+      "quality_default": "UNVERIFIED",
+      "notes": "45.22% of values are negative. This is a significant anomaly. Negative standpipe pressure is not physically plausible in an absolute sense. Requires VLOVE metadata to determine if this is a differential measure, an offset, or an artifact."
+    },
+    {
+      "canonical_field": "flow_rate",
+      "source_channel": "GS_TFLO",
+      "mapping_status": "MAPPED",
+      "rationale": "Present in source, 99.97% populated. 18 unique values. 28 exact changes. Mostly zero (97.9% of records). 1.9% negative. Very limited variance; behaves like a pump state indicator rather than a continuous flow measurement in this window.",
+      "unit": null,
+      "unit_status": "UNKNOWN",
+      "quality_default": "UNVERIFIED",
+      "notes": "97.9% zeros. 1.9% negative. Channel appears largely inactive in this dataset window."
+    },
+    {
+      "canonical_field": "hookload",
+      "source_channel": "GS_HKLD",
+      "mapping_status": "MAPPED",
+      "rationale": "Present in source, 95.84% populated. 576 unique values. 9,050 exact changes. Dynamic continuous behavior with stable range (56.95 to 78.51). Highest coverage and change count among well-behaved channels. Promising candidate for MVP use.",
+      "unit": null,
+      "unit_status": "UNKNOWN",
+      "quality_default": "UNVERIFIED"
+    },
+    {
+      "canonical_field": "block_position",
+      "source_channel": "GS_BPOS",
+      "mapping_status": "MAPPED",
+      "rationale": "Present in source, 99.97% populated. 874 unique values. 1,021 exact changes. Range 0 to 60. 25.22% zeros. Dynamic with significant zero periods. Behaves consistently with a travelling block height or stroke position sensor.",
+      "unit": null,
+      "unit_status": "UNKNOWN",
+      "quality_default": "UNVERIFIED"
+    }
+  ],
+
+  "explicitly_unmapped_channels": [
+    {
+      "source_channel": "GS_DMEA",
+      "reason": "Functionally constant (single unique value 2591.06 across 10,000 rows). Consistent with static well metadata (e.g. measured depth at end of run). Must not be mapped to a continuously varying depth field."
+    },
+    {
+      "source_channel": "GS_DVER",
+      "reason": "Functionally constant (single unique value 2439.50 across 10,000 rows). Consistent with static well metadata (e.g. vertical depth at end of run). Must not be mapped to a continuously varying depth field."
+    },
+    {
+      "source_channel": "GS_DRTM",
+      "reason": "Functionally constant (same value as GS_DMEA). Possibly a redundant depth register. No canonical mapping without source documentation."
+    },
+    {
+      "source_channel": "GS_TDH",
+      "reason": "90.9% populated, 52 unique values, range -656.2 to 30.2. Negative majority of range makes physical interpretation unclear. Cannot map without VLOVE documentation."
+    }
+  ],
+
+  "unit_policy": "All unit fields are null and unit_status is UNKNOWN for all WELL-1 channels. Physical units require verified VLOVE/eRTMAC channel dictionary before production use. Units must not be assumed.",
+
+  "gap_event": {
+    "description": "A telemetry continuity event was detected in WELL-1 between 2008-12-21T19:42:00Z and 2008-12-22T03:53:32Z (gap duration 29,492.986 seconds / ~8.2 hours). Records immediately following this gap must carry telemetry_status=SOURCE_GAP.",
+    "gap_start_timestamp": "2008-12-21T19:42:00Z",
+    "gap_end_timestamp": "2008-12-22T03:53:32Z",
+    "gap_duration_seconds": 29492.986,
+    "channels_becoming_nan_after_gap": ["GS_RPM", "GS_TQA", "GS_HKLD"],
+    "channels_continuing_normally": ["GS_ROP", "GS_SWOB", "GS_TFLO", "GS_DBTM", "GS_DMEA", "GS_DVER"],
+    "channels_changing_value": ["GS_SPPA", "GS_BPOS"]
+  }
+}

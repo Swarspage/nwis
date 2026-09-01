@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nwis.internal/schemas/intelligence/0.1.0",
+  "title": "NWIS Intelligence Record",
+  "description": "Version 0.1.0 intelligence record. Contains anomaly score, risk level, alert status, explainable evidence, and quality flags. Computed from M0.4 feature records. Risk thresholds and weights are documented prototype parameters only — not engineering standards.",
+  "version": "0.1.0",
+  "type": "object",
+  "required": [
+    "intelligence_version",
+    "timestamp",
+    "well_id",
+    "source_row_index",
+    "data_origin",
+    "telemetry_status",
+    "anomaly_score",
+    "risk_level",
+    "alert",
+    "confidence",
+    "evidence",
+    "quality_flags"
+  ],
+  "properties": {
+    "intelligence_version": {
+      "type": "string",
+      "description": "Intelligence engine version.",
+      "const": "0.1.0"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC timestamp. Propagated from canonical record."
+    },
+    "well_id": {
+      "type": "string",
+      "description": "NWIS internal well identifier. Preserved from canonical/feature record.",
+      "minLength": 1
+    },
+    "source_row_index": {
+      "type": ["integer", "null"],
+      "description": "Source row index. Preserved for full traceback.",
+      "minimum": 0
+    },
+    "data_origin": {
+      "type": "string",
+      "enum": ["HISTORICAL_SOURCE", "SYNTHETIC_DEMO", "FUTURE_LIVE_SOURCE"],
+      "description": "Provenance class. Preserved from canonical record."
+    },
+    "telemetry_status": {
+      "type": "string",
+      "enum": ["VALID", "SOURCE_GAP", "PARTIAL", "EMPTY", "DATA_ARTIFACT"],
+      "description": "Telemetry status. Preserved from canonical record."
+    },
+    "intelligence_status": {
+      "type": "string",
+      "enum": ["SCORED", "SUPPRESSED", "DEGRADED"],
+      "description": "Whether intelligence was computed. SUPPRESSED: quality gate blocked scoring (e.g. EMPTY record). DEGRADED: score computed but confidence reduced (e.g. source gap). SCORED: normal computation."
+    },
+    "anomaly_score": {
+      "type": ["number", "null"],
+      "description": "Composite anomaly score 0–100. Null if SUPPRESSED. PROTOTYPE: thresholds are not validated engineering standards.",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "risk_level": {
+      "type": ["string", "null"],
+      "enum": ["NORMAL", "WATCH", "ELEVATED", "HIGH", null],
+      "description": "Risk level derived from anomaly_score. PROTOTYPE thresholds: NORMAL 0-30, WATCH 30-60, ELEVATED 60-80, HIGH 80-100. Null if SUPPRESSED."
+    },
+    "alert": {
+      "type": "boolean",
+      "description": "True only after the anomaly persists across the configured debounce window. A single anomalous sample does not trigger an alert."
+    },
+    "confidence": {
+      "type": ["number", "null"],
+      "description": "Score confidence 0–1. Reflects feature coverage and source quality. Null if SUPPRESSED.",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "evidence": {
+      "type": "array",
+      "description": "Ordered list of top contributing features. Empty if SUPPRESSED or NORMAL with no meaningful contributions.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "feature": {
+            "type": "string",
+            "description": "Feature path string (e.g. 'hookload.roll_medium_mean')."
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["HIGH", "LOW", "ABNORMAL"],
+            "description": "Direction of the anomaly relative to baseline."
+          },
+          "contribution": {
+            "type": "number",
+            "description": "Fraction of total anomaly score from this feature (0–1).",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "z_score": {
+            "type": ["number", "null"],
+            "description": "Robust z-score (deviation from rolling median in units of MAD). Provided for interpretability."
+          }
+        },
+        "required": ["feature", "direction", "contribution"]
+      }
+    },
+    "quality_flags": {
+      "type": "object",
+      "description": "Machine-readable quality flags explaining any degradation or suppression.",
+      "properties": {
+        "suppressed_empty": {
+          "type": "boolean",
+          "description": "True if record was suppressed because telemetry_status == EMPTY."
+        },
+        "source_gap_suppression": {
+          "type": "boolean",
+          "description": "True if anomaly score was capped due to source gap adjacency."
+        },
+        "low_coverage": {
+          "type": "boolean",
+          "description": "True if fewer than 50% of the intelligence model features were available."
+        },
+        "insufficient_baseline": {
+          "type": "boolean",
+          "description": "True if the rolling baseline had fewer than 3 observations (early records)."
+        },
+        "available_feature_count": {
+          "type": "integer",
+          "description": "Number of intelligence model features that were non-null for this record."
+        }
+      }
+    },
+    "baseline_snapshot": {
+      "type": ["object", "null"],
+      "description": "Snapshot of the rolling baseline values used to produce this record's score. Included for auditability. Null if SUPPRESSED."
+    }
+  },
+  "additionalProperties": false,
+
+  "_prototype_thresholds": {
+    "risk_levels": {
+      "NORMAL":   [0, 30],
+      "WATCH":    [30, 60],
+      "ELEVATED": [60, 80],
+      "HIGH":     [80, 100]
+    },
+    "debounce_watch_records":    3,
+    "debounce_elevated_records": 2,
+    "source_gap_score_cap":      40,
+    "low_coverage_score_cap":    40,
+    "note": "All thresholds are prototype parameters for the NWIS MVP. They have not been validated against confirmed drilling events or engineering standards."
+  }
+}

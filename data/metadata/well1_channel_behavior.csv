@@ -1,0 +1,47 @@
+channel,dtype,non_null_percent,unique_count,change_percent,longest_constant_run,classification,notes
+GS_TVA,float64,99.97,340,32.63979193758127,902,dynamic continuous,Continuous variance.
+TTV2,float64,86.88,144,10.071362799263351,388,dynamic continuous,Continuous variance.
+GS_TFLO,float64,99.97,18,0.3100930279083725,7663,dynamic discrete,Steps or states.
+GS_TV10,float64,90.95,118,35.129191863661354,268,dynamic continuous,Continuous variance.
+GS_GASA,float64,99.97,1,0.01000300090027008,9979,mostly constant,Functionally constant.
+GS_TV13,float64,90.95,92,11.522814733369984,812,dynamic continuous,Continuous variance.
+GS_RPM,float64,99.89,5,0.20022024226649315,4540,dynamic discrete,Steps or states.
+GS_TV11,float64,90.95,35,14.568444200109951,281,dynamic continuous,Continuous variance.
+GS_SWOB,float64,99.97,1,0.01000300090027008,9979,mostly constant,Functionally constant.
+RSDX,float64,99.98,4,0.040008001600320066,6338,dynamic discrete,Steps or states.
+GS_ROP,float64,99.97,1,0.01000300090027008,9979,mostly constant,Functionally constant.
+GS_TQA,float64,95.84,116,17.07011686143573,2548,dynamic continuous,Continuous variance.
+GS_TV12,float64,90.95,15,7.751511819681143,322,dynamic discrete,Steps or states.
+GS_TV06,float64,90.95,21,15.909840571742716,302,dynamic continuous,Continuous variance.
+GS_CHKP,float64,90.94,222,91.48889377611611,267,dynamic continuous,Continuous variance.
+GS_MDOA,float64,90.94,5,0.06597756762700682,7401,dynamic discrete,Steps or states.
+GS_TV14,float64,86.88,6,3.4069981583793743,2213,dynamic discrete,Steps or states.
+GS_ACTC,int64,100.0,1,0.01,9999,mostly constant,Functionally constant.
+GS_MWTI,float64,90.94,6,7.411480096767099,353,dynamic discrete,Steps or states.
+GS_MTOA,float64,90.94,174,77.2927204750385,267,dynamic continuous,Continuous variance.
+GS_TV04,float64,90.95,67,32.43540406816932,539,dynamic continuous,Continuous variance.
+GS_TV09,float64,90.95,41,26.619021440351844,271,dynamic continuous,Continuous variance.
+GS_TV02,float64,90.95,53,37.84496976360638,270,dynamic continuous,Continuous variance.
+GS_TV07,float64,90.95,145,34.491478834524465,268,dynamic continuous,Continuous variance.
+GS_SPM2,float64,99.85000000000001,2,0.020030045067601403,7665,binary/state-like,Only two unique values.
+GS_BPOS,float64,99.97,874,10.243072921876562,2921,dynamic continuous,Continuous variance.
+GS_SPPA,float64,99.97,643,90.97729318795639,412,dynamic continuous,Continuous variance.
+GS_DBTM,float64,99.99,5,0.05000500050005,3981,dynamic discrete,Steps or states.
+GS_TDH,float64,90.94,52,3.8816802287222347,604,sparse,Varies but highly sparse.
+RSUX,float64,99.98,4,0.040008001600320066,6338,dynamic discrete,Steps or states.
+GS_TV01,float64,90.95,17,27.509620670698187,271,dynamic continuous,Continuous variance.
+FVOC,float64,99.98,324,33.25665133026605,903,dynamic continuous,Continuous variance.
+GS_SPM3,float64,99.9,1,0.01001001001001001,7846,mostly constant,Functionally constant.
+GS_CFIA,float64,93.49,79,5.444432559632046,1593,sparse,Varies but highly sparse.
+GS_TV03,float64,90.95,44,48.46619021440352,270,dynamic continuous,Continuous variance.
+GS_HKLD,float64,95.84,576,94.46994991652755,268,dynamic continuous,Continuous variance.
+GS_TTV1,float64,99.98,1,0.010002000400080016,8726,mostly constant,Functionally constant.
+GS_TV05,float64,90.95,11,6.311159978009896,586,dynamic discrete,Steps or states.
+GS_SPM1,float64,98.15,2,0.020376974019358125,7669,binary/state-like,Only two unique values.
+GS_DRTM,float64,99.97,1,0.01000300090027008,9979,mostly constant,Functionally constant.
+GS_DMEA,float64,100.0,1,0.01,9999,mostly constant,Functionally constant.
+MSP5,float64,99.96000000000001,5,0.20008003201280514,4540,dynamic discrete,Steps or states.
+GS_TVCA,float64,99.97,323,33.24997499249775,903,dynamic continuous,Continuous variance.
+MSP4,float64,93.49,384,6.621028987057439,1594,sparse,Varies but highly sparse.
+GS_TV08,float64,90.95,126,38.52666300164926,271,dynamic continuous,Continuous variance.
+GS_DVER,float64,100.0,1,0.01,9999,mostly constant,Functionally constant.

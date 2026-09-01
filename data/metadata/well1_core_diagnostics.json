@@ -1,0 +1,90 @@
+{
+  "GS_ROP": {
+    "min": 10.2600002064,
+    "max": 10.2600002064,
+    "median": 10.2600002064,
+    "mad": 0.0,
+    "outlier_count": 0,
+    "meaningful_change_tolerance": 0.0001
+  },
+  "GS_SWOB": {
+    "min": 0.0,
+    "max": 0.0,
+    "median": 0.0,
+    "mad": 0.0,
+    "outlier_count": 0,
+    "meaningful_change_tolerance": 0.0001
+  },
+  "GS_RPM": {
+    "min": 0.0,
+    "max": 25.0,
+    "median": 0.0,
+    "mad": 0.0,
+    "outlier_count": 0,
+    "meaningful_change_tolerance": 0.0001
+  },
+  "GS_TQA": {
+    "min": -558.739990119912,
+    "max": 40.8699985886453,
+    "median": 0.0199996705558365,
+    "mad": 0.0,
+    "outlier_count": 0,
+    "meaningful_change_tolerance": 0.0001
+  },
+  "GS_SPPA": {
+    "min": -283.999989551827,
+    "max": 35080.9997565222,
+    "median": 112.999997493662,
+    "mad": 140.99999986238402,
+    "outlier_count": 245,
+    "meaningful_change_tolerance": 7.049999993119201
+  },
+  "GS_TFLO": {
+    "min": -66414.54687396,
+    "max": 2000.4300547204,
+    "median": 0.0,
+    "mad": 0.0,
+    "outlier_count": 0,
+    "meaningful_change_tolerance": 0.0001
+  },
+  "GS_HKLD": {
+    "min": 56.9511488069147,
+    "max": 78.507948836548,
+    "median": 64.8845437683312,
+    "mad": 0.36709865533420327,
+    "outlier_count": 1219,
+    "meaningful_change_tolerance": 0.018354932766710165
+  },
+  "GS_BPOS": {
+    "min": 0.0,
+    "max": 60.0000000912,
+    "median": 1.000000032,
+    "mad": 1.000000032,
+    "outlier_count": 4056,
+    "meaningful_change_tolerance": 0.0500000016
+  },
+  "GS_DBTM": {
+    "min": 1.8200001192,
+    "max": 2557.8200685,
+    "median": 2.3000000736,
+    "mad": 0.4799999544000002,
+    "outlier_count": 4016,
+    "meaningful_change_tolerance": 0.023999997720000013
+  },
+  "GS_DMEA": {
+    "min": 2591.0600587128,
+    "max": 2591.0600587128,
+    "median": 2591.0600587128,
+    "mad": 0.0,
+    "outlier_count": 0,
+    "meaningful_change_tolerance": 0.0001
+  },
+  "GS_DVER": {
+    "min": 2439.5000000352,
+    "max": 2439.5000000352,
+    "median": 2439.5000000352,
+    "mad": 0.0,
+    "outlier_count": 0,
+    "meaningful_change_tolerance": 0.0001
+  }
+}

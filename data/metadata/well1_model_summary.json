@@ -1,0 +1,14 @@
+{
+  "well_id": "WELL-1-VLOVE",
+  "total_input_records": 51,
+  "total_model_outputs": 153,
+  "models_run": [
+    "anomaly_isolation_forest",
+    "behavioral_cluster",
+    "temporal_baseline"
+  ],
+  "status_counts": {
+    "LOW_COVERAGE": 146,
+    "INSUFFICIENT_DATA": 7
+  }
+}
