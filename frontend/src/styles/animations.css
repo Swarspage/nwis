@@ -1,0 +1,80 @@
+:root {
+  --motion-fast: 120ms;
+  --motion-base: 220ms;
+  --motion-slow: 420ms;
+  --motion-strata: 900ms;
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes strata-scroll {
+  0% {
+    background-position: 0 100%;
+  }
+  100% {
+    background-position: 0 0%;
+  }
+}
+
+@keyframes live-signal-pulse {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.page-motion {
+  animation: page-enter var(--motion-base) var(--ease-emphasis);
+}
+
+.soft-transition {
+  transition:
+    background-color var(--motion-fast) var(--ease-standard),
+    border-color var(--motion-fast) var(--ease-standard),
+    color var(--motion-fast) var(--ease-standard),
+    transform var(--motion-base) var(--ease-standard),
+    box-shadow var(--motion-base) var(--ease-standard);
+}
+
+.strata-loading {
+  background: linear-gradient(
+    to bottom,
+    var(--color-strata-tan) 0%,
+    var(--color-strata-slate) 33%,
+    var(--color-strata-umber) 66%,
+    var(--color-strata-sage) 100%
+  );
+  background-size: 100% 300%;
+  animation: strata-scroll var(--motion-strata) var(--ease-emphasis) infinite;
+}
+
+.live-pulse {
+  animation: live-signal-pulse 1.8s ease-in-out infinite;
+}

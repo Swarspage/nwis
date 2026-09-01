@@ -1,0 +1,109 @@
+:root {
+  /* Colors - Ink & Neutrals */
+  --color-ink: #0A2540;
+  --color-ink-deep: #061627;
+  --color-slate: #3E5164;
+  --color-body: #5B6B7A;
+  --color-mute: #8C99A6;
+
+  /* Colors - Surfaces */
+  --color-canvas: #F5F7F6;
+  --color-canvas-deep: #EDF1EF;
+  --color-surface: #FFFFFF;
+  --color-surface-sunken: #F0F3F2;
+  --color-hairline: #DFE6E3;
+  --color-hairline-strong: #C7D1CD;
+
+  /* Colors - Sidebar */
+  --color-sidebar-bg: #0A2540;
+  --color-sidebar-ink: #EAF0EE;
+  --color-sidebar-mute: rgba(234, 240, 238, 0.6);
+  --color-sidebar-active: #12385C;
+
+  /* Colors - Signal & Status */
+  --color-signal-teal: #1E8A8A;
+  --color-signal-teal-soft: #E3F2F0;
+  --color-brass: #C77A2E;
+  --color-brass-soft: #FBEEDF;
+  --color-rust: #B3261E;
+  --color-rust-soft: #FBE9E7;
+  --color-moss: #2F6F4E;
+  --color-moss-soft: #E7F1EB;
+  --color-focus-ring: rgba(30, 138, 138, 0.45);
+
+  /* Colors - Strata */
+  --color-strata-tan: #C9A87C;
+  --color-strata-slate: #5C7A99;
+  --color-strata-umber: #7A5C46;
+  --color-strata-sage: #7C9885;
+
+  /* Typography - Font Families */
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-code: "IBM Plex Mono", monospace;
+
+  /* Typography - Font Sizes */
+  --text-display-xl: 34px;
+  --text-display-lg: 26px;
+  --text-heading-md: 20px;
+  --text-heading-sm: 16px;
+  --text-body-md: 15px;
+  --text-body-sm: 13px;
+  --text-label-sm: 12px;
+  --text-data-lg: 22px;
+  --text-data-md: 14px;
+  --text-data-sm: 12px;
+
+  /* Typography - Font Weights */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* Typography - Line Heights */
+  --leading-display-xl: 1.15;
+  --leading-display-lg: 1.2;
+  --leading-heading-md: 1.35;
+  --leading-heading-sm: 1.4;
+  --leading-body-md: 1.55;
+  --leading-body-sm: 1.5;
+  --leading-label-sm: 1.4;
+  --leading-data-lg: 1.2;
+  --leading-data-md: 1.4;
+  --leading-data-sm: 1.4;
+
+  /* Typography - Letter Spacing */
+  --tracking-display-xl: -0.01em;
+  --tracking-display-lg: -0.005em;
+  --tracking-label-sm: 0.01em;
+  --tracking-data-lg: -0.01em;
+
+  /* Spacing */
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 48px;
+  --space-section: 64px;
+
+  /* Border Radii */
+  --radius-none: 0px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 9999px;
+
+  /* Shadows */
+  --shadow-none: none;
+  --shadow-card: 0 1px 2px rgba(10,37,64,0.04), 0 8px 24px rgba(10,37,64,0.05);
+  --shadow-card-hover: 0 2px 4px rgba(10,37,64,0.06), 0 14px 32px rgba(10,37,64,0.09);
+
+  /* Layout */
+  --sidebar-expanded-width: 240px;
+  --sidebar-collapsed-width: 72px;
+  --topbar-height: 64px;
+  --depth-rail-width: 6px;
+  --content-max-width: 1440px;
+  --well-context-width: 320px;
+}

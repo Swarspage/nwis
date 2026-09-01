@@ -13,6 +13,7 @@ class DataService:
         self.historical_events = []
         self.risk = []
         self.summary = {}
+        self.synthetic = {}
         
         self.telemetry_ts = []
         self.intelligence_ts = []
@@ -49,6 +50,46 @@ class DataService:
         if os.path.exists(config.WELL1_RISK_SUMMARY):
             with open(config.WELL1_RISK_SUMMARY, 'r') as f:
                 self.summary = json.load(f)
+                
+        # Load synthetic wells
+        sim_dir = os.path.join(config.DATA_DIR, "simulation")
+        if os.path.exists(sim_dir):
+            for i in range(2, 7):
+                wid = f"WELL-{i}"
+                self.synthetic[wid] = {
+                    "telemetry": self._load_jsonl(os.path.join(sim_dir, f"well-{i}_telemetry.jsonl")),
+                    "intelligence": self._load_jsonl(os.path.join(sim_dir, f"well-{i}_intelligence.jsonl")),
+                    "models": self._load_jsonl(os.path.join(sim_dir, f"well-{i}_models.jsonl")),
+                    "risk": self._load_jsonl(os.path.join(sim_dir, f"well-{i}_risk.jsonl")),
+                }
+
+    def get_dataset(self, well_id: str, kind: str):
+        if well_id == "WELL-1":
+            if kind == "telemetry": return self.telemetry
+            if kind == "intelligence": return self.intelligence
+            if kind == "models": return self.models
+            if kind == "risk": return self.risk
+            if kind == "historical_events": return self.historical_events
+        else:
+            if well_id in self.synthetic:
+                if kind in self.synthetic[well_id]:
+                    return self.synthetic[well_id][kind]
+            return []
+        return []
+        
+    def get_dataset_ts(self, well_id: str, kind: str):
+        if well_id == "WELL-1":
+            if kind == "telemetry": return self.telemetry_ts
+            if kind == "intelligence": return self.intelligence_ts
+            if kind == "models": return self.models_ts
+            if kind == "risk": return self.risk_ts
+        else:
+            ds = self.get_dataset(well_id, kind)
+            if kind == "models":
+                return sorted(list(set(r.get("timestamp") for r in ds if r.get("timestamp"))))
+            else:
+                return [r.get("timestamp") for r in ds if r.get("timestamp")]
+        return []
 
     def get_latest_before_or_at(self, dataset: list, ts_list: list, target_ts: str):
         """Finds the chronologically latest record at or before target_ts."""
@@ -59,10 +100,9 @@ class DataService:
             return None
         return dataset[idx - 1]
         
-    def get_models_at(self, target_ts: str):
-        """Models might have multiple records per timestamp."""
-        res = [m for m in self.models if m.get("timestamp") == target_ts]
-        return res
+    def get_models_at(self, well_id: str, target_ts: str):
+        ds = self.get_dataset(well_id, "models")
+        return [m for m in ds if m.get("timestamp") == target_ts]
         
     def get_timeline(self, dataset: list, start_time: str = None, end_time: str = None, limit: int = 500):
         res = dataset

@@ -1,0 +1,209 @@
+CODEFLOW ANALYSIS REPORT
+========================
+
+Repository: Swarspage/nwis
+Analyzed: 1/9/2026, 1:13:46 pm
+
+SUMMARY
+-------
+Health Score: 96/100 (Grade: A)
+Files: 70
+Functions: 57
+Lines of Code: 10,271
+Dependencies: 44
+Unused Functions: 2
+Security Issues: 2
+
+SECURITY ISSUES
+---------------
+1. [LOW] Code Comments
+   File: backend/package-lock.json
+   1 TODO/FIXME comments found. Address before release.
+
+2. [LOW] Assert in Production
+   File: ml/ingestion/analyze_channels.py
+   6 assert statements found. Assertions are stripped with python -O. Use proper validation.
+
+UNUSED FUNCTIONS (2)
+--------------------
+These functions are never called and may be dead code:
+
+1. compute_signal_features()
+   File: ml/features/signal_features.py (line 179)
+   Lines: 16
+   Code:
+      def compute_signal_features(record: dict, history_df: pd.DataFrame) -> dict:
+          """
+          Single-record wrapper around compute_all_signal_features.
+          Used by the streaming per-record path in feature_engine.py.
+          Returns the feature dict for the LAST row of history_df (the current record).
+          """
+          if len(history_df) == 0:
+              out = {}
+              for field in CANONICAL_MEASUREMENT_FIELDS:
+                  out[field] = _null_field(field, MEANINGFUL_CHANGE_TOLERANCE.get(field, 1e-4))
+              out["depth"] = {"current_value": None,
+                              "_unavailable_reason": "No verified continuous depth channel in WELL-1."}
+              return out
+      
+          all_feats = compute_all_signal_features(history_df)
+        // ...
+
+2. transform_dataframe()
+   File: ml/ingestion/canonical_transform.py (line 150)
+   Lines: 6
+   Code:
+      def transform_dataframe(df: pd.DataFrame) -> Iterator[dict]:
+          """Yield canonical records for each row in the DataFrame."""
+          for idx, row in df.iterrows():
+              yield transform_row(row, idx)
+      
+      
+
+PATTERNS DETECTED
+-----------------
+Factory
+  Creates objects without specifying exact class. Enables loose coupling and extensibility.
+  Files: main.jsx
+
+ARCHITECTURE ISSUES
+-------------------
+[WARNING] 1 Oversized Files Skipped
+  Files larger than 2 MB are listed but their contents are not parsed
+  Affected: WELL-1.csv
+
+[CRITICAL] 13 Files Not Fetched — Partial Analysis
+  GitHub API requests failed (usually the unauthenticated rate limit of 60/hour). Every metric below is computed WITHOUT these files. Add a token, or use Open ZIP for a complete analysis.
+  Affected: risk_scorer.py, validate_intelligence.py, __init__.py, anomaly_model.py, dataset_adapter.py, feature_registry.py, model_engine.py, model_registry.py, preprocessing.py, state_model.py, temporal_model.py, validate_models.py, scratch_inspect_features.py
+
+[WARNING] 2 Unused Functions
+  Functions not called from other files
+  Affected: compute_signal_features, transform_dataframe
+
+[CRITICAL] 1 Architecture Violations
+  Lower layers importing from higher layers
+  Affected: utils → services
+
+[WARNING] 8 High Complexity Files
+  Approximate cyclomatic complexity >30 (counts branch keywords and boolean operators per file)
+  Affected: validate_canonical.py (82), validate_features.py (68), inspect_data.py (67), state_features.py (56), analyze_channels.py (54), intelligence_engine.py (45), anomaly_detector.py (35), baseline.py (31)
+
+FILE LIST
+---------
+.gitignore (38 lines, 0 functions, utils)
+README.md (2 lines, 0 functions, note)
+backend/package-lock.json (1481 lines, 0 functions, utils)
+backend/package.json (21 lines, 0 functions, utils)
+backend/src/server.js (25 lines, 0 functions, utils)
+data/metadata/well1_audit.json (1452 lines, 0 functions, data)
+data/metadata/well1_canonical_mapping.json (136 lines, 0 functions, data)
+data/metadata/well1_channel_behavior.csv (48 lines, 0 functions, data)
+data/metadata/well1_channel_summary.csv (245 lines, 0 functions, data)
+data/metadata/well1_core_channel_metrics.csv (13 lines, 0 functions, data)
+data/metadata/well1_core_channel_ranking.csv (13 lines, 0 functions, data)
+data/metadata/well1_core_correlation.csv (13 lines, 0 functions, data)
+data/metadata/well1_core_diagnostics.json (90 lines, 0 functions, data)
+data/metadata/well1_correlation.csv (245 lines, 0 functions, data)
+data/metadata/well1_intelligence_summary.json (168 lines, 0 functions, data)
+data/metadata/well1_model_summary.json (14 lines, 0 functions, data)
+data/processed/well1_canonical_sample.jsonl (11 lines, 0 functions, data)
+data/processed/well1_feature_sample.jsonl (52 lines, 0 functions, data)
+data/processed/well1_intelligence_sample.jsonl (52 lines, 0 functions, data)
+data/processed/well1_model_sample.jsonl (154 lines, 0 functions, data)
+data/raw/WELL-1.csv (0 lines, 0 functions, data)
+docs/canonical-schema.md (240 lines, 0 functions, note)
+docs/feature-engineering.md (245 lines, 0 functions, note)
+docs/intelligence-layer.md (138 lines, 0 functions, note)
+docs/ml-modeling.md (87 lines, 0 functions, note)
+frontend/.gitignore (25 lines, 0 functions, utils)
+frontend/.oxlintrc.json (9 lines, 0 functions, utils)
+frontend/README.md (17 lines, 0 functions, note)
+frontend/index.html (14 lines, 0 functions, utils)
+frontend/package-lock.json (2300 lines, 0 functions, utils)
+frontend/package.json (28 lines, 0 functions, utils)
+frontend/src/App.jsx (15 lines, 1 functions, utils)
+frontend/src/index.css (2 lines, 0 functions, utils)
+frontend/src/main.jsx (11 lines, 0 functions, utils)
+frontend/vite.config.js (9 lines, 0 functions, utils)
+ml/features/__init__.py (3 lines, 0 functions, utils)
+ml/features/feature_engine.py (179 lines, 4 functions, utils)
+ml/features/quality_features.py (89 lines, 1 functions, utils)
+ml/features/relationship_features.py (134 lines, 4 functions, utils)
+ml/features/signal_features.py (195 lines, 4 functions, services)
+ml/features/state_features.py (85 lines, 2 functions, utils)
+ml/features/validate_features.py (253 lines, 5 functions, utils)
+ml/features/windows.py (52 lines, 0 functions, utils)
+ml/ingestion/analyze_channels.py (227 lines, 3 functions, utils)
+ml/ingestion/canonical_transform.py (183 lines, 5 functions, utils)
+ml/ingestion/inspect_data.py (252 lines, 1 functions, utils)
+ml/ingestion/validate_canonical.py (426 lines, 6 functions, utils)
+ml/intelligence/__init__.py (3 lines, 0 functions, utils)
+ml/intelligence/anomaly_detector.py (194 lines, 6 functions, utils)
+ml/intelligence/baseline.py (150 lines, 9 functions, utils)
+ml/intelligence/evidence.py (105 lines, 2 functions, utils)
+ml/intelligence/intelligence_engine.py (328 lines, 4 functions, utils)
+ml/intelligence/risk_scorer.py (0 lines, 0 functions, utils)
+ml/intelligence/validate_intelligence.py (0 lines, 0 functions, utils)
+ml/models/__init__.py (0 lines, 0 functions, data)
+ml/models/anomaly_model.py (0 lines, 0 functions, data)
+ml/models/dataset_adapter.py (0 lines, 0 functions, data)
+ml/models/feature_registry.py (0 lines, 0 functions, data)
+ml/models/model_engine.py (0 lines, 0 functions, data)
+ml/models/model_registry.py (0 lines, 0 functions, data)
+ml/models/preprocessing.py (0 lines, 0 functions, data)
+ml/models/state_model.py (0 lines, 0 functions, data)
+ml/models/temporal_model.py (0 lines, 0 functions, data)
+ml/models/validate_models.py (0 lines, 0 functions, data)
+ml/requirements.txt (0 lines, 0 functions, utils)
+ml/scratch_inspect_features.py (0 lines, 0 functions, utils)
+schemas/nwis_features.schema.json (0 lines, 0 functions, data)
+schemas/nwis_intelligence.schema.json (0 lines, 0 functions, data)
+schemas/nwis_model_output.schema.json (0 lines, 0 functions, data)
+schemas/nwis_telemetry.schema.json (0 lines, 0 functions, data)
+
+DEPENDENCIES
+------------
+App.jsx -> main.jsx (App: 1 calls)
+feature_engine.py -> __init__.py (process_records: 1 calls)
+feature_engine.py -> __init__.py (process_jsonl_file: 2 calls)
+quality_features.py -> feature_engine.py (compute_quality_features: 2 calls)
+relationship_features.py -> feature_engine.py (compute_relationship_features: 2 calls)
+signal_features.py -> feature_engine.py (compute_all_signal_features: 2 calls)
+state_features.py -> feature_engine.py (compute_state_features: 2 calls)
+feature_engine.py -> validate_features.py (process_records: 2 calls)
+intelligence_engine.py -> __init__.py (process_jsonl_file: 2 calls)
+intelligence_engine.py -> __init__.py (process_feature_records: 1 calls)
+anomaly_detector.py -> intelligence_engine.py (_extract_mvp_values: 3 calls)
+anomaly_detector.py -> intelligence_engine.py (compute_component_scores: 3 calls)
+anomaly_detector.py -> intelligence_engine.py (combine_scores: 3 calls)
+baseline.py -> intelligence_engine.py (RollingBaseline: 2 calls)
+evidence.py -> intelligence_engine.py (extract_evidence: 2 calls)
+canonical-schema.md -> nwis_telemetry.schema.json ([](../schemas/nwis_telemetry.schema.json): 1 calls)
+canonical-schema.md -> nwis_telemetry.schema.json ([](../schemas/nwis_telemetry.schema.json): 1 calls)
+canonical-schema.md -> well1_canonical_mapping.json ([](../data/metadata/well1_canonical_mapping.json): 1 calls)
+canonical-schema.md -> well1_canonical_sample.jsonl ([](../data/processed/well1_canonical_sample.jsonl): 1 calls)
+canonical-schema.md -> canonical_transform.py ([](../ml/ingestion/canonical_transform.py): 1 calls)
+canonical-schema.md -> validate_canonical.py ([](../ml/ingestion/validate_canonical.py): 1 calls)
+feature-engineering.md -> nwis_features.schema.json ([](../schemas/nwis_features.schema.json): 1 calls)
+feature-engineering.md -> quality_features.py ([](../ml/features/quality_features.py): 1 calls)
+feature-engineering.md -> signal_features.py ([](../ml/features/signal_features.py): 1 calls)
+feature-engineering.md -> state_features.py ([](../ml/features/state_features.py): 1 calls)
+feature-engineering.md -> relationship_features.py ([](../ml/features/relationship_features.py): 1 calls)
+feature-engineering.md -> windows.py ([](../ml/features/windows.py): 1 calls)
+feature-engineering.md -> quality_features.py ([](../ml/features/quality_features.py): 1 calls)
+feature-engineering.md -> signal_features.py ([](../ml/features/signal_features.py): 1 calls)
+feature-engineering.md -> state_features.py ([](../ml/features/state_features.py): 1 calls)
+feature-engineering.md -> relationship_features.py ([](../ml/features/relationship_features.py): 1 calls)
+feature-engineering.md -> feature_engine.py ([](../ml/features/feature_engine.py): 1 calls)
+feature-engineering.md -> validate_features.py ([](../ml/features/validate_features.py): 1 calls)
+feature-engineering.md -> nwis_features.schema.json ([](../schemas/nwis_features.schema.json): 1 calls)
+feature-engineering.md -> well1_feature_sample.jsonl ([](../data/processed/well1_feature_sample.jsonl): 1 calls)
+intelligence-layer.md -> nwis_intelligence.schema.json ([](../schemas/nwis_intelligence.schema.json): 1 calls)
+intelligence-layer.md -> validate_intelligence.py ([](../ml/intelligence/validate_intelligence.py): 1 calls)
+intelligence-layer.md -> nwis_intelligence.schema.json ([](../schemas/nwis_intelligence.schema.json): 1 calls)
+intelligence-layer.md -> well1_intelligence_sample.jsonl ([](../data/processed/well1_intelligence_sample.jsonl): 1 calls)
+intelligence-layer.md -> well1_intelligence_summary.json ([](../data/metadata/well1_intelligence_summary.json): 1 calls)
+ml-modeling.md -> nwis_model_output.schema.json ([](../schemas/nwis_model_output.schema.json): 1 calls)
+ml-modeling.md -> feature_registry.py ([](../ml/models/feature_registry.py): 1 calls)
+ml-modeling.md -> preprocessing.py ([](../ml/models/preprocessing.py): 1 calls)
+ml-modeling.md -> validate_models.py ([](../ml/models/validate_models.py): 1 calls)
