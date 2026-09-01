@@ -1,5 +1,6 @@
 import { api } from "../api/client.js";
 import { useApiResource } from "../api/hooks.js";
+import { useAppState } from "../app/AppState.jsx";
 import HistoricalContext from "../components/dashboard/HistoricalContext.jsx";
 import Card from "../components/ui/Card.jsx";
 import DataTable from "../components/ui/DataTable.jsx";

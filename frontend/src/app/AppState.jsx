@@ -6,17 +6,29 @@ const AppStateContext = createContext(null);
 export function AppStateProvider({ children }) {
   const [simulationMode, setSimulationMode] = useState("replay");
   const [selectedTimestamp, setSelectedTimestamp] = useState(null);
-  const [selectedWell, setSelectedWell] = useState("WELL-1");
+  const [selectedWell, setSelectedWellState] = useState("WELL-1");
   const [simulationState, setSimulationState] = useState(null);
+
+  const setSelectedWell = (wellId) => {
+    setSelectedWellState(wellId);
+    if (wellId !== "WELL-1") {
+      setSimulationMode("live");
+    } else {
+      setSimulationMode("replay");
+    }
+  };
 
   useEffect(() => {
     // Poll simulation status every 1s
+    let active = true;
     const fetchStatus = async () => {
       try {
         const res = await api.simulationStatus();
-        setSimulationState(res);
-        if (res.mode === "LIVE_SIMULATION" && res.status === "PLAYING") {
-          setSelectedTimestamp(res.current_sim_time);
+        if (active) {
+          setSimulationState(res);
+          if (res.mode === "LIVE_SIMULATION" && res.status === "PLAYING") {
+            setSelectedTimestamp(res.current_sim_time);
+          }
         }
       } catch (err) {
         console.error("Failed to fetch simulation status", err);
@@ -25,7 +37,10 @@ export function AppStateProvider({ children }) {
     
     fetchStatus();
     const intv = setInterval(fetchStatus, 1000);
-    return () => clearInterval(intv);
+    return () => {
+      active = false;
+      clearInterval(intv);
+    };
   }, []);
 
   const value = useMemo(

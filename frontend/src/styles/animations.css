@@ -78,3 +78,17 @@
 .live-pulse {
   animation: live-signal-pulse 1.8s ease-in-out infinite;
 }
+
+/* Used via inline style animation: 'livePulse 1.8s ...' — must be global */
+@keyframes livePulse {
+  0%   { opacity: 0.3; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
+.card-hover:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+  transition: box-shadow var(--motion-base) var(--ease-standard), transform var(--motion-base) var(--ease-standard);
+}
+
