@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+.pytest_cache/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+*.env
+
+# Data artifacts (processed data generated during processing/runs)
+data/processed/*
+!data/processed/.gitkeep
+
+# Build and distribution outputs
+dist/
+build/
+*.log
+
+# IDE & OS files
+.DS_Store
+.vscode/
+.idea/
+Thumbs.db
