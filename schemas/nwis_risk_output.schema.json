@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NWIS Risk Output Record",
+  "description": "Frontend-ready unified risk record combining analytical evidence (M0.5, M0.6), historical provenance (M0.7), and an isolated prototype supervised baseline.",
+  "type": "object",
+  "required": [
+    "timestamp",
+    "well_id",
+    "data_origin",
+    "risk_score",
+    "risk_level",
+    "confidence",
+    "alert",
+    "analytical_evidence",
+    "historical_evidence",
+    "prototype_supervised"
+  ],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "well_id": {
+      "type": "string"
+    },
+    "data_origin": {
+      "type": "string"
+    },
+    "risk_score": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Unified risk score normalized to 0-100."
+    },
+    "risk_level": {
+      "type": ["string", "null"],
+      "enum": ["NORMAL", "WATCH", "ELEVATED", "HIGH", "ANOMALOUS", "STATISTICAL DEVIATION", "PATTERN CHANGE", null],
+      "description": "Categorical risk level. M0.5/M0.6 analytical evidence must NOT generate physical event names."
+    },
+    "confidence": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "alert": {
+      "type": "boolean"
+    },
+    "explanation": {
+      "type": ["string", "null"],
+      "description": "Human-readable explanation of the risk condition."
+    },
+    "analytical_evidence": {
+      "type": "object",
+      "required": ["m05", "m06", "fusion_metadata"],
+      "properties": {
+        "m05": {
+          "type": "object",
+          "description": "M0.5 Deterministic Intelligence contribution."
+        },
+        "m06": {
+          "type": "object",
+          "description": "M0.6 Statistical ML Evidence contribution."
+        },
+        "fusion_metadata": {
+          "type": "object",
+          "description": "Metadata regarding the configured vs effective fusion weights."
+        }
+      }
+    },
+    "historical_evidence": {
+      "type": "object",
+      "required": ["available"],
+      "properties": {
+        "available": {
+          "type": "boolean",
+          "description": "True if an M0.7 verified historical event aligns with this record."
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "prototype_supervised": {
+      "type": "object",
+      "required": ["available", "data_origin", "used_in_risk_score"],
+      "properties": {
+        "available": {
+          "type": "boolean"
+        },
+        "data_origin": {
+          "type": "string",
+          "enum": ["SYNTHETIC_DEMO", "UNAVAILABLE"],
+          "description": "Must be SYNTHETIC_DEMO if available. Never use unverified historical labels."
+        },
+        "used_in_risk_score": {
+          "type": "boolean",
+          "const": false,
+          "description": "Must be false to prevent unvalidated prototype predictions from affecting the risk score."
+        },
+        "validation_status": {
+          "type": "string",
+          "const": "NOT_REAL_WORLD_VALIDATED"
+        },
+        "prediction": {
+          "type": ["string", "null"]
+        },
+        "probability": {
+          "type": ["number", "null"]
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

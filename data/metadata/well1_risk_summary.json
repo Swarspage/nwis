@@ -1,0 +1,9 @@
+{
+  "well_id": "WELL-1",
+  "m05_intelligence_available": true,
+  "m06_statistical_models_available": true,
+  "m07_verified_historical_events_available": 0,
+  "supervised_event_labels_available": 0,
+  "note": "No real supervised event accuracy claimed. Prototype fusion and chronological replay demonstrated.",
+  "risk_records_generated": 51
+}
