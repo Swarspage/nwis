@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NWIS Knowledge Record Schema",
+  "description": "Standard schema for aligned retrospective knowledge records containing the historical event and associated telemetry/model evidence.",
+  "type": "object",
+  "required": [
+    "knowledge_id",
+    "event",
+    "context",
+    "feature_evidence",
+    "intelligence_evidence",
+    "model_evidence",
+    "provenance"
+  ],
+  "properties": {
+    "knowledge_id": {
+      "type": "string"
+    },
+    "event": {
+      "description": "The normalized historical event serving as the evidence anchor.",
+      "$ref": "nwis_historical_event.schema.json"
+    },
+    "operational_context": {
+      "type": ["object", "null"],
+      "description": "Optional operational context (e.g., DRILLING, TRIPPING) describing the rig state during the event.",
+      "properties": {
+        "state": { "type": "string" },
+        "source": { "type": "string" },
+        "confidence": { "type": ["number", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "context": {
+      "type": "object",
+      "required": ["pre_event", "event_window", "post_event"],
+      "properties": {
+        "pre_event": {
+          "type": "object",
+          "required": ["start", "end", "record_count"],
+          "properties": {
+            "start": { "type": ["string", "null"] },
+            "end": { "type": ["string", "null"] },
+            "record_count": { "type": "integer" }
+          },
+          "additionalProperties": false
+        },
+        "event_window": {
+          "type": "object",
+          "required": ["start", "end", "record_count"],
+          "properties": {
+            "start": { "type": ["string", "null"] },
+            "end": { "type": ["string", "null"] },
+            "record_count": { "type": "integer" }
+          },
+          "additionalProperties": false
+        },
+        "post_event": {
+          "type": "object",
+          "required": ["start", "end", "record_count"],
+          "properties": {
+            "start": { "type": ["string", "null"] },
+            "end": { "type": ["string", "null"] },
+            "record_count": { "type": "integer" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "feature_evidence": {
+      "type": "array",
+      "description": "Selected M0.4 feature records attached to the event window.",
+      "items": { "type": "object" }
+    },
+    "intelligence_evidence": {
+      "type": "array",
+      "description": "Selected M0.5 deterministic intelligence outputs attached to the event window.",
+      "items": { "type": "object" }
+    },
+    "model_evidence": {
+      "type": "array",
+      "description": "Selected M0.6 model outputs attached to the event window.",
+      "items": { "type": "object" }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["created_at", "builder_version"],
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "builder_version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

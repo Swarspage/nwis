@@ -1,0 +1,7 @@
+{
+  "well_id": "WELL-1",
+  "historical_event_count": 0,
+  "knowledge_record_count": 0,
+  "status": "NO_VERIFIED_HISTORICAL_EVENTS_AVAILABLE",
+  "reason": "No authoritative historical event documentation was identified in the available repository data."
+}

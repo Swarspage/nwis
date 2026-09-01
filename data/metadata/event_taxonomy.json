@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "allowed_event_types": [
+    "STUCK_PIPE",
+    "MUD_LOSS",
+    "KICK",
+    "HIGH_TORQUE",
+    "PRESSURE_ANOMALY",
+    "ROP_REDUCTION",
+    "WASHOUT",
+    "FISHING",
+    "WELL_CONTROL",
+    "OTHER",
+    "UNKNOWN"
+  ]
+}
