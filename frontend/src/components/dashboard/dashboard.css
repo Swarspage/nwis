@@ -59,6 +59,7 @@
   color: var(--color-body);
   font-size: var(--text-body-sm);
   line-height: var(--leading-body-sm);
+  overflow-wrap: anywhere;
 }
 
 .model-panel {

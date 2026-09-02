@@ -12,7 +12,7 @@ export default function ModelEvidence({ records = [], prototype }) {
   }));
 
   return (
-    <Card>
+    <Card className="model-evidence-card">
       <SectionHeader
         title="M0.6 Model Evidence"
         description="Statistical model outputs are separated by model and are not physical event confirmations."
@@ -33,12 +33,16 @@ export default function ModelEvidence({ records = [], prototype }) {
         <div className="state-panel" style={{ marginTop: "var(--space-lg)" }}>
           <div className="model-head">
             <div>
-              <h3 className="state-title">Prototype Random Forest</h3>
-              <p className="state-copy">SYNTHETIC DEMO · NOT REAL-WORLD VALIDATED · NOT USED IN CURRENT RISK SCORE</p>
+              <h3 className="state-title" style={{ fontSize: "14px", fontWeight: 600 }}>
+                Prototype Random Forest
+              </h3>
+              <p className="state-copy" style={{ fontSize: "11px", marginTop: 2 }}>
+                SYNTHETIC DEMO · NOT REAL-WORLD VALIDATED · NOT USED IN CURRENT RISK SCORE
+              </p>
             </div>
             <Badge tone="strong">{prototype.data_origin || "SYNTHETIC_DEMO"}</Badge>
           </div>
-          <dl className="data-kv">
+          <dl className="data-kv" style={{ gridTemplateColumns: "repeat(4, minmax(0, 1fr))", marginTop: 12 }}>
             <div><dt>Prediction</dt><dd>{titleize(prototype.prediction)}</dd></div>
             <div><dt>Probability</dt><dd>{formatPercent(prototype.probability)}</dd></div>
             <div><dt>Used in risk score</dt><dd>{formatValue(prototype.used_in_risk_score)}</dd></div>

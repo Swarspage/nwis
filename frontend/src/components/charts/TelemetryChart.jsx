@@ -50,14 +50,17 @@ function extractSeries(records, fields) {
   return fields.map((f, idx) => {
     const data = records.map((r) => {
       const ts = r.timestamp;
-      const meas = r.measurements?.[f.key];
-      const val = meas?.value ?? null;
+      const val =
+        r.signal_features?.[f.key]?.current_value ??
+        r.measurements?.[f.key]?.value ??
+        null;
       return [ts, val];
     });
 
     return {
       name: f.label,
       type: "line",
+      yAxisIndex: idx,
       data,
       smooth: true,
       symbol: "none",
@@ -92,8 +95,8 @@ export default function TelemetryChart({
 
     return {
       animation: true,
-      animationDuration: 220,
-      animationEasing: "cubicOut",
+      animationDuration: 300,
+      animationEasing: "quadraticOut",
       backgroundColor: "transparent",
       textStyle: {
         fontFamily: "'IBM Plex Mono', monospace",
@@ -176,18 +179,20 @@ export default function TelemetryChart({
         },
         splitLine: { show: false },
       },
-      yAxis: {
+      yAxis: fields.map((f, idx) => ({
         type: "value",
+        scale: true,
+        show: idx === 0,
+        splitLine: idx === 0 ? { lineStyle: { color: DS.hairline, type: "dashed", width: 1 } } : { show: false },
         axisLine: { show: false },
         axisTick: { show: false },
-        splitLine: { lineStyle: { color: DS.hairline, type: "dashed", width: 1 } },
         axisLabel: {
           fontFamily: "'IBM Plex Mono', monospace",
           fontSize: 10,
           color: DS.mute,
-          formatter: (v) => (Math.abs(v) >= 1000 ? `${(v / 1000).toFixed(1)}k` : `${v}`),
+          formatter: (v) => (Math.abs(v) >= 1000 ? `${(v / 1000).toFixed(1)}k` : `${typeof v === "number" ? v.toFixed(1) : v}`),
         },
-      },
+      })),
       series,
     };
   }, [records, fields, title, compact]);

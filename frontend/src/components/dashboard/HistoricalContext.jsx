@@ -7,7 +7,7 @@ export default function HistoricalContext({ historical }) {
   const count = historical?.count ?? historical?.events?.length ?? 0;
 
   return (
-    <Card>
+    <Card style={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <SectionHeader
         title="M0.7 Historical Context"
         description="Verified historical events only. Empty state is expected for WELL-1."

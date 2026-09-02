@@ -9,6 +9,10 @@ export function AppStateProvider({ children }) {
   const [selectedWell, setSelectedWellState] = useState("WELL-1");
   const [simulationState, setSimulationState] = useState(null);
 
+  // Cross-panel focus context — set by any panel, consumed across pages.
+  // Shape: { type: 'signal'|'evidence'|'driver'|'well'|'depth'|'timestamp', key, label, meta }
+  const [focusContext, setFocusContext] = useState(null);
+
   const setSelectedWell = (wellId) => {
     setSelectedWellState(wellId);
     if (wellId !== "WELL-1") {
@@ -53,8 +57,10 @@ export function AppStateProvider({ children }) {
       setSelectedWell,
       simulationState,
       setSimulationState,
+      focusContext,
+      setFocusContext,
     }),
-    [simulationMode, selectedTimestamp, selectedWell, simulationState],
+    [simulationMode, selectedTimestamp, selectedWell, simulationState, focusContext],
   );
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;

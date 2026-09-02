@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useCallback, useRef } from "react";
 import { api } from "../api/client.js";
 import { useApiResource } from "../api/hooks.js";
@@ -460,79 +461,35 @@ export default function Overview() {
         />
       </div>
 
-      {/* Bottom row: M0.5 Evidence + M0.6 Models + Historical Context */}
-      <div className="card-grid" style={{ alignItems: "start" }}>
-        <div className="span-4">
-          <div
-            style={{
-              background: "var(--color-surface)",
-              border: "1px solid var(--color-hairline)",
-              borderRadius: "var(--radius-lg)",
-              padding: "var(--space-lg)",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "var(--text-label-sm)",
-                fontWeight: "var(--weight-medium)",
-                color: "var(--color-mute)",
-                marginBottom: "var(--space-sm)",
-              }}
-            >
-              M0.5 Intelligence
-            </div>
-            <EvidenceSummary intelligence={latestIntelligence} risk={riskData} />
-          </div>
-        </div>
+      {/* Row 1: M0.6 Model Evidence (Full Width span-12 for spacious 6-column DataTable legibility) */}
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
+        style={{ marginBottom: "var(--space-lg)" }}
+      >
+        <ModelEvidence records={latestModels} prototype={riskData?.prototype_supervised} />
+      </motion.div>
 
-        <div className="span-4">
-          <div
-            style={{
-              background: "var(--color-surface)",
-              border: "1px solid var(--color-hairline)",
-              borderRadius: "var(--radius-lg)",
-              padding: "var(--space-lg)",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "var(--text-label-sm)",
-                fontWeight: "var(--weight-medium)",
-                color: "var(--color-mute)",
-                marginBottom: "var(--space-sm)",
-              }}
-            >
-              M0.6 Model Evidence
-            </div>
-            <ModelEvidence records={latestModels} prototype={riskData?.prototype_supervised} compact />
-          </div>
-        </div>
+      {/* Row 2: M0.5 Intelligence (span-6) & M0.7 Historical Context (span-6) side-by-side */}
+      <div className="card-grid" style={{ alignItems: "stretch" }}>
+        <motion.div
+          className="span-6"
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.08, ease: "easeOut" }}
+        >
+          <EvidenceSummary intelligence={latestIntelligence} risk={riskData} />
+        </motion.div>
 
-        <div className="span-4">
-          <div
-            style={{
-              background: "var(--color-surface)",
-              border: "1px solid var(--color-hairline)",
-              borderRadius: "var(--radius-lg)",
-              padding: "var(--space-lg)",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "var(--text-label-sm)",
-                fontWeight: "var(--weight-medium)",
-                color: "var(--color-mute)",
-                marginBottom: "var(--space-sm)",
-              }}
-            >
-              M0.7 Historical Context
-            </div>
-            <HistoricalContext historical={historical.data} />
-          </div>
-        </div>
+        <motion.div
+          className="span-6"
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.16, ease: "easeOut" }}
+        >
+          <HistoricalContext historical={historical.data} />
+        </motion.div>
       </div>
     </div>
   );
