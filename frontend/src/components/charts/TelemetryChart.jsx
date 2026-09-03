@@ -60,6 +60,7 @@ function extractSeries(records, fields) {
     return {
       name: f.label,
       type: "line",
+      xAxisIndex: idx,
       yAxisIndex: idx,
       data,
       smooth: true,
@@ -116,13 +117,24 @@ export default function TelemetryChart({
             left: 4,
           }
         : undefined,
-      grid: {
-        top: title ? 40 : 20,
-        right: 16,
-        bottom: compact ? 28 : 36,
-        left: 60,
-        containLabel: false,
+      axisPointer: {
+        link: [{ xAxisIndex: "all" }],
       },
+      grid: fields.map((f, idx) => {
+        const topOffset = title ? 40 : 20;
+        const bottomOffset = compact ? 28 : 36;
+        const gap = 16;
+        const totalHeight = height - topOffset - bottomOffset;
+        const rowHeight = Math.max(20, (totalHeight - (fields.length - 1) * gap) / fields.length);
+        
+        return {
+          top: topOffset + idx * (rowHeight + gap),
+          height: rowHeight,
+          right: 16,
+          left: 60,
+          containLabel: false,
+        };
+      }),
       legend:
         fields.length > 1
           ? {
@@ -164,12 +176,14 @@ export default function TelemetryChart({
           return `<div style="font-size:10px;color:${DS.mute};margin-bottom:4px;">${ts}</div>${lines.join("<br/>")}`;
         },
       },
-      xAxis: {
+      xAxis: fields.map((f, idx) => ({
+        gridIndex: idx,
         type: "category",
         data: timestamps,
         axisLine: { lineStyle: { color: DS.hairline } },
         axisTick: { show: false },
         axisLabel: {
+          show: idx === fields.length - 1, // only show labels on bottom axis
           formatter: formatTs,
           fontFamily: "'IBM Plex Mono', monospace",
           fontSize: 10,
@@ -178,12 +192,12 @@ export default function TelemetryChart({
           rotate: compact ? 30 : 0,
         },
         splitLine: { show: false },
-      },
+      })),
       yAxis: fields.map((f, idx) => ({
+        gridIndex: idx,
         type: "value",
         scale: true,
-        show: idx === 0,
-        splitLine: idx === 0 ? { lineStyle: { color: DS.hairline, type: "dashed", width: 1 } } : { show: false },
+        splitLine: { lineStyle: { color: DS.hairline, type: "dashed", width: 1 } },
         axisLine: { show: false },
         axisTick: { show: false },
         axisLabel: {

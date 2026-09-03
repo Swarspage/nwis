@@ -26,10 +26,26 @@ import { OrbitControls, Html, Center, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
 // World size the model is normalized to, so camera framing is model-agnostic
-const TARGET_SIZE = 8;
+const TARGET_SIZE = 20;
+
+const INITIAL_DEPTHS = {
+  "WELL-2": 8200.0,
+  "WELL-3": 8420.0,
+  "WELL-4": 8600.0,
+  "WELL-5": 8800.0,
+  "WELL-6": 9000.0,
+};
+
+const MAX_DEPTHS = {
+  "WELL-2": 8223.5,
+  "WELL-3": 8447.8,
+  "WELL-4": 8618.9,
+  "WELL-5": 8807.1,
+  "WELL-6": 9021.7,
+};
 
 // ── Loaded GLB Model ────────────────────────────────────────
-function LoadedWellModel({ playing }) {
+function LoadedWellModel({ playing, wellId, simDepth }) {
   const groupRef = useRef();
 
   const { scene } = useGLTF("/meshy_1788283030252.glb");
@@ -57,8 +73,18 @@ function LoadedWellModel({ playing }) {
   }, [scene]);
 
   useFrame((_, delta) => {
-    if (groupRef.current && playing) {
-      groupRef.current.rotation.y += delta * 0.25; // slow deliberate rotation
+    if (groupRef.current) {
+      if (playing) {
+        groupRef.current.rotation.y += delta * 0.25; // slow deliberate rotation
+      }
+      if (simDepth != null && INITIAL_DEPTHS[wellId] && MAX_DEPTHS[wellId]) {
+        const initial = INITIAL_DEPTHS[wellId];
+        const maxDepth = MAX_DEPTHS[wellId];
+        const progress = Math.max(0, Math.min(1, (simDepth - initial) / (maxDepth - initial)));
+        groupRef.current.position.y = -progress * 1.5; // continuous progress movement
+      } else {
+        groupRef.current.position.y = 0;
+      }
     }
   });
 
@@ -176,10 +202,13 @@ function TelemetryCallouts({ telemetry }) {
   const formatVal = (val) => (val != null ? val.toFixed(1) : "—");
   const depthVal = getMeasurementValue("depth");
 
+  const simDepth = telemetry?.simulation_context?.depth?.value;
+  const isSyntheticSim = telemetry?.simulation_context?.depth?.semantics === "SYNTHETIC_SIMULATION";
+
   return (
     <>
       {/* Depth Indicator Callout (Attached lower on the rig) */}
-      <Html position={[0, -3, 3]} center zIndexRange={[100, 0]}>
+      <Html position={[0, -1.5, 3]} center zIndexRange={[100, 0]}>
         <div style={{
           background: "rgba(6,22,39,0.85)",
           borderLeft: "2px solid var(--color-signal-teal)",
@@ -198,6 +227,39 @@ function TelemetryCallouts({ telemetry }) {
           </div>
         </div>
       </Html>
+
+      {/* Simulation MD Callout (Attached near the drill string / bottom) */}
+      {isSyntheticSim && (
+        <Html position={[0, -8, 0]} center zIndexRange={[100, 0]}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ width: 1, height: 40, background: "rgba(234,240,238,0.2)", marginBottom: 4 }} />
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: "var(--color-brass)", marginBottom: 8 }} />
+            <div style={{
+              background: "rgba(6,22,39,0.85)",
+              borderTop: "2px solid var(--color-brass)",
+              padding: "8px 12px",
+              color: "#EAF0EE",
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: "11px",
+              whiteSpace: "nowrap",
+              pointerEvents: "auto",
+              borderRadius: "0 0 6px 6px",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+              textAlign: "center"
+            }} title="Synthetic drilling progression. Not measured sensor depth.">
+              <div style={{ color: "var(--color-mute)", fontSize: "9px", marginBottom: 2, letterSpacing: "0.05em" }}>
+                SIMULATION MD
+              </div>
+              <div style={{ fontSize: "13px", fontWeight: "bold", color: "var(--color-ink-inverse, #fff)" }}>
+                {simDepth != null ? `${simDepth.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ft` : "—"}
+              </div>
+              <div style={{ color: "var(--color-brass)", fontSize: "8px", marginTop: 4, fontWeight: 500, letterSpacing: "0.05em" }}>
+                SYNTHETIC DEMO
+              </div>
+            </div>
+          </div>
+        </Html>
+      )}
 
       {/* Main Telemetry Box (Attached higher up) */}
       <Html position={[4, 3, 0]} center zIndexRange={[100, 0]}>
@@ -339,7 +401,7 @@ export default function WellViewport3D({
 
           <Suspense fallback={<ModelLoader />}>
             <Center>
-              <LoadedWellModel playing={playing} riskScore={riskScore} />
+              <LoadedWellModel playing={playing} wellId={wellId} simDepth={telemetry?.simulation_context?.depth?.value} riskScore={riskScore} />
             </Center>
           </Suspense>
 

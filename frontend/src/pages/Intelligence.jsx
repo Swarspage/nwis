@@ -77,6 +77,7 @@ function EvidenceCard({ item, index, focused, onClick }) {
     <div
       onClick={onClick}
       title="Click to inspect evidence detail"
+      className="card-interactive"
       style={{
         background: bg,
         border: `1px solid ${borderColor}`,
@@ -85,16 +86,6 @@ function EvidenceCard({ item, index, focused, onClick }) {
         display: "flex",
         flexDirection: "column",
         gap: 6,
-        cursor: "pointer",
-        transition: "border-color var(--motion-fast) var(--ease-standard), background var(--motion-fast) var(--ease-standard), box-shadow var(--motion-base) var(--ease-standard)",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = "var(--shadow-card-hover)";
-        e.currentTarget.style.transform = "translateY(-1px)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = "none";
-        e.currentTarget.style.transform = "none";
       }}
     >
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>

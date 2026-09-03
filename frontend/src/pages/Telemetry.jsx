@@ -276,8 +276,9 @@ export default function Telemetry() {
                   fontSize: "var(--text-label-sm)",
                   fontWeight: "var(--weight-medium)",
                   cursor: "pointer",
-                  transition: "all var(--motion-fast) var(--ease-standard)",
+                  transition: "background-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard), transform var(--motion-fast) var(--ease-standard)",
                 }}
+                className="button"
               >
                 {ch.label}
               </button>

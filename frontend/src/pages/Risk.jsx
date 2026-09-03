@@ -55,19 +55,16 @@ function RiskDriverCard({ item, focused, onClick }) {
     <div
       onClick={onClick}
       title="Click to inspect — sets focus for Models page"
+      className="card-interactive"
       style={{
-        background: focused ? "var(--color-signal-teal-soft)" : "var(--color-surface-sunken)",
-        border: `1px solid ${focused ? "var(--color-signal-teal)" : isHigh ? "var(--color-brass)" : "var(--color-hairline)"}`,
-        borderRadius: "var(--radius-md)",
-        padding: "12px 14px",
-        cursor: "pointer",
-        transition: "border-color var(--motion-fast), background var(--motion-fast), box-shadow var(--motion-base)",
+        background: focused ? "var(--color-signal-teal-soft)" : "var(--color-surface)",
+        border: `1px solid ${focused ? "var(--color-signal-teal)" : "var(--color-hairline)"}`,
+        borderRadius: "var(--radius-lg)",
+        padding: "16px 20px",
         display: "flex",
         flexDirection: "column",
-        gap: 8,
+        gap: "var(--space-sm)",
       }}
-      onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "var(--shadow-card-hover)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-      onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}
     >
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
         <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-body-sm)", fontWeight: "var(--weight-semibold)", color: "var(--color-ink)" }}>

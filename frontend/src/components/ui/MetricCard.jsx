@@ -70,20 +70,17 @@ export default function MetricCard({
   return (
     <div
       onClick={onClick}
+      className={onClick ? "card-interactive" : ""}
       style={{
         background: bg,
         border: `1px solid ${borderColor}`,
         borderRadius: "var(--radius-lg)",
         padding: small ? "12px 14px" : "16px 18px",
-        cursor: onClick ? "pointer" : "default",
-        transition: "border-color var(--motion-fast) var(--ease-standard), background var(--motion-fast) var(--ease-standard), box-shadow var(--motion-base) var(--ease-standard)",
         display: "flex",
         flexDirection: "column",
         gap: 6,
         minWidth: 0,
       }}
-      onMouseEnter={onClick ? (e) => { e.currentTarget.style.boxShadow = "var(--shadow-card-hover)"; e.currentTarget.style.transform = "translateY(-1px)"; } : undefined}
-      onMouseLeave={onClick ? (e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; } : undefined}
     >
       {/* Label */}
       <div

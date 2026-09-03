@@ -3,7 +3,7 @@ import os
 from datetime import datetime, timezone
 import pandas as pd
 
-from .synthetic_wells import SyntheticGenerator, get_well_profile
+from .synthetic_wells import SyntheticGenerator, get_well_profile, get_initial_simulated_depth_ft
 from ml.features.feature_engine import process_records as process_features
 from ml.intelligence.intelligence_engine import process_feature_records as process_intelligence
 from ml.models.model_engine import process_feature_records as process_models
@@ -16,6 +16,7 @@ def build_fixture_for_well(well_id: str, seed: int, output_dir: str):
     # 1 hour at 5 seconds per step = 720 records
     START_TIME = datetime(2026, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
     generator = SyntheticGenerator(seed=seed, start_time=START_TIME, step_seconds=5)
+    generator.simulated_depth = get_initial_simulated_depth_ft(well_id)
     
     telemetry_records = []
     for _ in range(720):

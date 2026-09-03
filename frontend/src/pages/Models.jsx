@@ -72,20 +72,17 @@ function ModelArchCard({ record, focused, onClick }) {
   return (
     <div
       onClick={onClick}
+      className="card-interactive"
       style={{
         background: focused ? "var(--color-signal-teal-soft)" : "var(--color-surface-sunken)",
         border: `1px solid ${focused ? "var(--color-signal-teal)" : "var(--color-hairline)"}`,
         borderRadius: "var(--radius-lg)",
         padding: "var(--space-md)",
-        cursor: "pointer",
-        transition: "border-color var(--motion-fast), background var(--motion-fast), box-shadow var(--motion-base)",
         display: "flex",
         flexDirection: "column",
         gap: 8,
         height: "100%",
       }}
-      onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "var(--shadow-card-hover)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-      onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}
     >
       {/* Icon + role */}
       <div style={{ display: "flex", alignItems: "center", gap: "var(--space-xs)" }}>

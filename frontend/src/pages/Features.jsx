@@ -122,19 +122,16 @@ export default function Features() {
               <div
                 key={ch.key}
                 onClick={() => focused ? clearFocus() : focus(FOCUS_TYPES.SIGNAL, ch.key, ch.label)}
+                className="card-interactive"
                 style={{
                   background: focused ? "var(--color-signal-teal-soft)" : "var(--color-surface-sunken)",
                   border: `1px solid ${focused ? "var(--color-signal-teal)" : ch.status === "available" ? "var(--color-hairline)" : ch.status === "missing" ? "var(--color-brass)" : "var(--color-hairline-strong)"}`,
                   borderRadius: "var(--radius-md)",
                   padding: "10px 12px",
-                  cursor: "pointer",
-                  transition: "border-color var(--motion-fast), background var(--motion-fast)",
                   display: "flex",
                   flexDirection: "column",
                   gap: 6,
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "var(--shadow-card-hover)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
               >
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 4 }}>
                   <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-label-sm)", fontWeight: "var(--weight-medium)", color: "var(--color-slate)" }}>

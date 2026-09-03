@@ -4,7 +4,7 @@ import { useAppState } from "../../app/AppState.jsx";
 export default function SimulationControls() {
   const { selectedWell, simulationState } = useAppState();
 
-  // Only show for synthetic wells
+  // Only render for synthetic demo wells
   if (selectedWell === "WELL-1") return null;
 
   const status = simulationState?.status ?? "PAUSED";
@@ -22,53 +22,75 @@ export default function SimulationControls() {
   return (
     <div
       style={{
-        background: "var(--color-ink)",
-        borderBottom: "1px solid rgba(234,240,238,0.08)",
-        padding: "10px var(--space-xl)",
+        position: "fixed",
+        bottom: "20px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        zIndex: 999,
+        background: "rgba(15, 23, 42, 0.88)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+        border: "1px solid rgba(255, 255, 255, 0.12)",
+        borderRadius: "var(--radius-pill)",
+        padding: "6px 18px",
+        boxShadow: "0 12px 32px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.2)",
         display: "flex",
-        flexWrap: "wrap",
         alignItems: "center",
         gap: "var(--space-md)",
-        flexShrink: 0,
+        maxWidth: "92vw",
+        transition: "all var(--motion-normal) var(--ease-standard)",
       }}
+      className="simulation-dock"
     >
-      {/* Label */}
-      <span
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: "var(--text-label-sm)",
-          fontWeight: "var(--weight-medium)",
-          color: "rgba(234,240,238,0.5)",
-          letterSpacing: "0.01em",
-          textTransform: "uppercase",
-          whiteSpace: "nowrap",
-        }}
-      >
-        Simulation
-      </span>
+      {/* Simulation status dot & badge */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span
+          style={{
+            width: 8,
+            height: 8,
+            borderRadius: "50%",
+            background: isPlaying ? "var(--color-signal-teal)" : "#f59e0b",
+            boxShadow: isPlaying ? "0 0 8px var(--color-signal-teal)" : "none",
+            display: "inline-block",
+            transition: "all 300ms",
+          }}
+        />
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: "11px",
+            fontWeight: "var(--weight-semibold)",
+            color: "rgba(248, 250, 252, 0.85)",
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {isPlaying ? "Simulating" : "Paused"}
+        </span>
+      </div>
 
-      <div style={{ width: 1, height: 18, background: "rgba(234,240,238,0.12)" }} />
+      <div style={{ width: 1, height: 16, background: "rgba(255, 255, 255, 0.12)" }} />
 
-      {/* Play / Pause */}
+      {/* Play / Pause Toggle */}
       <button
         onClick={() => control(isPlaying ? "pause" : "start")}
         style={{
           display: "flex",
           alignItems: "center",
           gap: 6,
-          background: isPlaying ? "var(--color-signal-teal)" : "rgba(234,240,238,0.1)",
-          color: isPlaying ? "#fff" : "var(--color-sidebar-ink)",
+          background: isPlaying ? "var(--color-signal-teal)" : "rgba(255, 255, 255, 0.12)",
+          color: "#ffffff",
           border: "none",
-          borderRadius: "var(--radius-md)",
-          padding: "6px 14px",
+          borderRadius: "var(--radius-pill)",
+          padding: "5px 14px",
           fontFamily: "var(--font-body)",
-          fontSize: "var(--text-body-sm)",
+          fontSize: "var(--text-label-sm)",
           fontWeight: "var(--weight-medium)",
           cursor: "pointer",
-          transition: "background 220ms",
+          transition: "background var(--motion-fast) var(--ease-standard), transform var(--motion-fast) var(--ease-standard)",
         }}
-        onMouseEnter={(e) => { if (!isPlaying) e.currentTarget.style.background = "rgba(234,240,238,0.18)"; }}
-        onMouseLeave={(e) => { if (!isPlaying) e.currentTarget.style.background = "rgba(234,240,238,0.1)"; }}
+        className="button"
       >
         {isPlaying ? (
           <>
@@ -88,55 +110,45 @@ export default function SimulationControls() {
         )}
       </button>
 
-      {/* Reset */}
+      {/* Reset Button */}
       <button
         onClick={() => control("reset")}
         style={{
-          background: "rgba(234,240,238,0.08)",
-          color: "rgba(234,240,238,0.6)",
-          border: "1px solid rgba(234,240,238,0.12)",
-          borderRadius: "var(--radius-md)",
-          padding: "5px 12px",
+          background: "rgba(255, 255, 255, 0.06)",
+          color: "rgba(248, 250, 252, 0.75)",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+          borderRadius: "var(--radius-pill)",
+          padding: "4px 12px",
           fontFamily: "var(--font-body)",
-          fontSize: "var(--text-body-sm)",
+          fontSize: "var(--text-label-sm)",
+          fontWeight: "var(--weight-medium)",
           cursor: "pointer",
-          transition: "background 120ms",
+          transition: "background var(--motion-fast) var(--ease-standard)",
         }}
-        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(234,240,238,0.14)"}
-        onMouseLeave={(e) => e.currentTarget.style.background = "rgba(234,240,238,0.08)"}
+        className="button"
       >
         Reset
       </button>
 
-      <div style={{ width: 1, height: 18, background: "rgba(234,240,238,0.12)" }} />
+      <div style={{ width: 1, height: 16, background: "rgba(255, 255, 255, 0.12)" }} />
 
-      {/* Speed buttons */}
+      {/* Speed Controls */}
       <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: "10px",
-            color: "rgba(234,240,238,0.35)",
-            marginRight: 4,
-          }}
-        >
-          Speed
-        </span>
         {[1, 5, 10, 60].map((s) => (
           <button
             key={s}
             onClick={() => control("speed", { speed: s })}
             style={{
-              background: speed === s ? "var(--color-signal-teal)" : "rgba(234,240,238,0.07)",
-              color: speed === s ? "#fff" : "rgba(234,240,238,0.55)",
-              border: "none",
+              background: speed === s ? "rgba(255, 255, 255, 0.2)" : "transparent",
+              color: speed === s ? "#ffffff" : "rgba(248, 250, 252, 0.55)",
+              border: speed === s ? "1px solid rgba(255, 255, 255, 0.25)" : "1px solid transparent",
               borderRadius: "var(--radius-sm)",
-              padding: "4px 9px",
+              padding: "2px 7px",
               fontFamily: "var(--font-code)",
               fontSize: "11px",
               fontWeight: "var(--weight-medium)",
               cursor: "pointer",
-              transition: "background 120ms, color 120ms",
+              transition: "all var(--motion-fast) var(--ease-standard)",
             }}
           >
             {s}×
@@ -144,18 +156,23 @@ export default function SimulationControls() {
         ))}
       </div>
 
-      {/* Clock */}
-      <div style={{ marginLeft: "auto" }}>
+      {/* Sim Clock readout */}
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <div style={{ width: 1, height: 16, background: "rgba(255, 255, 255, 0.12)" }} />
         <span
           style={{
             fontFamily: "var(--font-code)",
-            fontSize: "var(--text-data-sm)",
-            color: "rgba(234,240,238,0.45)",
+            fontSize: "12px",
+            color: "var(--color-signal-teal)",
+            fontWeight: "var(--weight-medium)",
+            letterSpacing: "0.02em",
           }}
         >
           {simulationState?.current_sim_time
             ? new Date(simulationState.current_sim_time).toLocaleTimeString("en-GB", {
-                hour: "2-digit", minute: "2-digit", second: "2-digit"
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
               })
             : "—"}
         </span>

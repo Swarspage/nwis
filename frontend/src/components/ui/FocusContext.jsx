@@ -137,7 +137,7 @@ export function FocusBanner() {
           color: "var(--color-ink)",
         }}
       >
-        {focusContext.label}
+        {focusContext.key === "depth" ? "Depth selected — canonical sensor depth unavailable" : focusContext.label}
       </span>
       <button
         onClick={clearFocus}

@@ -63,6 +63,14 @@ class DataService:
                     "risk": self._load_jsonl(os.path.join(sim_dir, f"well-{i}_risk.jsonl")),
                 }
 
+        # Apply deterministic cascading demo simulation pass
+        try:
+            from .demo_simulation import apply_demo_simulation_pass
+            apply_demo_simulation_pass(self)
+        except Exception as e:
+            print(f"[DataService] Warning: Demo simulation pass failed: {e}")
+
+
     def get_dataset(self, well_id: str, kind: str):
         if well_id == "WELL-1":
             if kind == "telemetry": return self.telemetry

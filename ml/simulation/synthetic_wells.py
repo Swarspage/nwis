@@ -17,6 +17,7 @@ class SyntheticGenerator:
         self.current_time = start_time
         self.step_seconds = step_seconds
         self.t_index = 0
+        self.simulated_depth = 8420.0 # Will be set via argument
         
         # Baselines
         self.state = {
@@ -96,6 +97,10 @@ class SyntheticGenerator:
         if not ts_iso.endswith("+00:00"):
             ts_iso += "+00:00"
             
+        # Update simulated depth strictly based on ROP
+        drilled_distance = (self.state["rate_of_penetration"] / 3600.0) * self.step_seconds
+        self.simulated_depth += drilled_distance
+            
         self.current_time += timedelta(seconds=self.step_seconds)
         self.t_index += 1
         
@@ -122,6 +127,14 @@ class SyntheticGenerator:
             "data_origin": "SYNTHETIC_DEMO",
             "telemetry_status": "ACTIVE",
             "simulation": True,
+            "simulation_context": {
+                "depth": {
+                    "value": round(self.simulated_depth, 4),
+                    "unit": "ft",
+                    "semantics": "SYNTHETIC_SIMULATION",
+                    "source": "synthetic_rop_progression"
+                }
+            },
             "measurements": measurements
         }
 
@@ -134,3 +147,13 @@ def get_well_profile(well_id: str) -> str:
         "WELL-6": "RECOVERY",
     }
     return mapping.get(well_id, "NORMAL")
+
+def get_initial_simulated_depth_ft(well_id: str) -> float:
+    mapping = {
+        "WELL-2": 8200.0,
+        "WELL-3": 8420.0,
+        "WELL-4": 8600.0,
+        "WELL-5": 8800.0,
+        "WELL-6": 9000.0,
+    }
+    return mapping.get(well_id, 8420.0)
