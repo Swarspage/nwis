@@ -83,7 +83,7 @@ export default function Guidance() {
     [ts, selectedWell]
   );
 
-  if (guidanceRes.state === "loading") return <LoadingState lines={8} />;
+  if (guidanceRes.state === "loading") return <LoadingState variant="guidance" />;
   if (guidanceRes.state === "error") return <ErrorState error={guidanceRes.error} />;
 
   const g = guidanceRes.data || {};
@@ -101,7 +101,9 @@ export default function Guidance() {
 
   const handleStepClick = (stepText) => {
     const lower = stepText.toLowerCase();
-    if (lower.includes("telemetry") || lower.includes("torque") || lower.includes("hookload") || lower.includes("spp") || lower.includes("pressure")) {
+    if (lower.includes("offset") || lower.includes("look-ahead") || lower.includes("spatial") || lower.includes("interval")) {
+      navigate("/offsets");
+    } else if (lower.includes("telemetry") || lower.includes("torque") || lower.includes("hookload") || lower.includes("spp") || lower.includes("pressure")) {
       navigate("/telemetry");
     } else if (lower.includes("model") || lower.includes("m0.6")) {
       navigate("/models");
@@ -111,6 +113,7 @@ export default function Guidance() {
       navigate("/telemetry");
     }
   };
+
 
   const handleFocusEvidence = (item) => {
     setFocusContext({ feature: item.evidence, timestamp: g.timestamp, wellId: selectedWell });

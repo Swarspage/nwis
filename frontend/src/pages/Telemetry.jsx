@@ -78,7 +78,7 @@ export default function Telemetry() {
     pollMs
   );
 
-  if (telemetry.state === "loading") return <LoadingState lines={5} />;
+  if (telemetry.state === "loading") return <LoadingState variant="telemetry" lines={6} />;
   if (telemetry.state === "error") return <ErrorState error={telemetry.error} />;
 
   const records = telemetry.data?.records || [];

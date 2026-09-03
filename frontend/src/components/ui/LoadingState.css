@@ -1,0 +1,296 @@
+/**
+ * Premium Pulsating Skeleton State CSS
+ * NWIS Operational Telemetry & Risk Intelligence
+ */
+
+/* ── Pulsating Keyframes ──────────────────────────────────── */
+
+@keyframes skeleton-pulsate {
+  0% {
+    opacity: 0.45;
+    transform: scale(0.996);
+    box-shadow: 0 0 0 rgba(30, 138, 138, 0);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.003);
+    box-shadow: 0 4px 20px rgba(30, 138, 138, 0.14);
+  }
+  100% {
+    opacity: 0.45;
+    transform: scale(0.996);
+    box-shadow: 0 0 0 rgba(30, 138, 138, 0);
+  }
+}
+
+@keyframes skeleton-shimmer-pulse {
+  0% {
+    background-position: -200% 0;
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    background-position: 200% 0;
+    opacity: 0.5;
+  }
+}
+
+@keyframes gauge-ring-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(30, 138, 138, 0.4);
+    border-color: rgba(30, 138, 138, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 24px 8px rgba(30, 138, 138, 0.18);
+    border-color: var(--color-signal-teal, #1E8A8A);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(30, 138, 138, 0);
+    border-color: rgba(30, 138, 138, 0.25);
+  }
+}
+
+@keyframes text-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    color: var(--color-mute, #8C99A6);
+  }
+  50% {
+    opacity: 1;
+    color: var(--color-signal-teal, #1E8A8A);
+  }
+}
+
+@keyframes laser-scan {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+/* ── Container & Layouts ──────────────────────────────────── */
+
+.skeleton-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg, 24px);
+  width: 100%;
+  position: relative;
+  animation: page-enter var(--motion-base, 220ms) var(--ease-emphasis, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+/* Status Indicator Header with Pulsating Teal Laser Bar */
+.skeleton-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(30, 138, 138, 0.06);
+  border: 1px dashed rgba(30, 138, 138, 0.35);
+  border-radius: var(--radius-md, 10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-status-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-signal-teal, #1E8A8A), transparent);
+  animation: skeleton-shimmer-pulse 2s ease-in-out infinite;
+}
+
+.skeleton-status-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-code, "IBM Plex Mono", monospace);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-signal-teal, #1E8A8A);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.skeleton-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-signal-teal, #1E8A8A);
+  box-shadow: 0 0 10px rgba(30, 138, 138, 0.8);
+  animation: livePulse 1.2s ease-in-out infinite;
+}
+
+/* Pulsating Block Element */
+.skeleton-block {
+  border-radius: var(--radius-md, 8px);
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-sunken, #F0F3F2) 0%,
+    var(--color-canvas-deep, #EDF1EF) 30%,
+    #FFFFFF 50%,
+    var(--color-canvas-deep, #EDF1EF) 70%,
+    var(--color-surface-sunken, #F0F3F2) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer-pulse 1.8s ease-in-out infinite, skeleton-pulsate 2.4s ease-in-out infinite;
+}
+
+.skeleton-card {
+  position: relative;
+  background: var(--color-surface, #FFFFFF);
+  border: 1px solid var(--color-hairline, #DFE6E3);
+  border-radius: var(--radius-lg, 14px);
+  padding: var(--space-md, 18px) var(--space-lg, 22px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm, 14px);
+  box-shadow: 0 2px 10px rgba(10, 37, 64, 0.03);
+  overflow: hidden;
+  animation: skeleton-pulsate 2.8s ease-in-out infinite;
+}
+
+/* Pulsating Scanning Beam on Cards */
+.skeleton-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(30, 138, 138, 0.4), transparent);
+  animation: laser-scan 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.skeleton-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs, 8px);
+}
+
+.skeleton-header-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm, 12px);
+}
+
+/* Hero Panel with Pulsating Gauge */
+.skeleton-hero-panel {
+  background: var(--color-surface, #FFFFFF);
+  border: 1px solid var(--color-hairline, #DFE6E3);
+  border-radius: var(--radius-lg, 14px);
+  padding: var(--space-lg, 24px);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl, 32px);
+  position: relative;
+  overflow: hidden;
+  animation: skeleton-pulsate 3s ease-in-out infinite;
+}
+
+.skeleton-gauge-circle {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 12px solid rgba(30, 138, 138, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  animation: gauge-ring-pulse 2s ease-in-out infinite;
+  background: radial-gradient(circle, rgba(30, 138, 138, 0.08) 0%, transparent 70%);
+}
+
+.skeleton-pulsating-text {
+  font-family: var(--font-code, "IBM Plex Mono", monospace);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  animation: text-pulse 1.6s ease-in-out infinite;
+  user-select: none;
+}
+
+/* Grid Layouts */
+.skeleton-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md, 16px);
+}
+
+.skeleton-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-md, 16px);
+}
+
+.skeleton-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-md, 16px);
+}
+
+/* Table Skeletons */
+.skeleton-table-wrapper {
+  background: var(--color-surface, #FFFFFF);
+  border: 1px solid var(--color-hairline, #DFE6E3);
+  border-radius: var(--radius-lg, 14px);
+  overflow: hidden;
+  animation: skeleton-pulsate 3.2s ease-in-out infinite;
+}
+
+.skeleton-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: var(--color-surface-sunken, #F0F3F2);
+  border-bottom: 1px solid var(--color-hairline, #DFE6E3);
+}
+
+.skeleton-table-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-hairline, #DFE6E3);
+}
+
+.skeleton-table-row:last-child {
+  border-bottom: none;
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+  .skeleton-grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .skeleton-hero-panel {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .skeleton-grid-3,
+  .skeleton-grid-2,
+  .skeleton-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}

@@ -9,6 +9,7 @@ import Replay from "../pages/Replay.jsx";
 import Risk from "../pages/Risk.jsx";
 import Telemetry from "../pages/Telemetry.jsx";
 import Guidance from "../pages/Guidance.jsx";
+import Offsets from "../pages/Offsets.jsx";
 
 export default function Router() {
   return (
@@ -23,6 +24,7 @@ export default function Router() {
         <Route path="guidance" element={<Guidance />} />
         <Route path="historical" element={<Historical />} />
         <Route path="replay" element={<Replay />} />
+        <Route path="offsets" element={<Offsets />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

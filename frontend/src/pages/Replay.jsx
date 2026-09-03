@@ -189,7 +189,7 @@ export default function Replay() {
 
   const telemetryRows = useMemo(() => measurementRows(snapshot.data?.telemetry), [snapshot.data]);
 
-  if (timeline.state === "loading") return <LoadingState lines={5} />;
+  if (timeline.state === "loading") return <LoadingState variant="table" lines={5} />;
   if (timeline.state === "error") return <ErrorState error={timeline.error} />;
   if (!records.length) return <ErrorState title="Replay unavailable" error={new Error("No timeline records returned by the API.")} />;
 
@@ -243,7 +243,7 @@ export default function Replay() {
         <ProgressScrubber index={index} total={records.length} records={records} onSeek={setIndex} />
       </Panel>
 
-      {snapshot.state === "loading" && <LoadingState lines={4} />}
+      {snapshot.state === "loading" && <LoadingState variant="table" lines={4} />}
       {snapshot.state === "error" && <ErrorState error={snapshot.error} />}
 
       {snapshot.state === "success" && snapshot.data && (

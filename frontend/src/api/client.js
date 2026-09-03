@@ -35,9 +35,14 @@ export const api = {
   intelligence: (params = {}, wellId = WELL_ID) => request(`/wells/${wellId}/intelligence`, params),
   models: (params = {}, wellId = WELL_ID) => request(`/wells/${wellId}/models`, params),
   historicalEvents: (wellId = WELL_ID) => request(`/wells/${wellId}/historical-events`),
+  historicalEvidence: (params = {}, wellId = WELL_ID) => request(`/wells/${wellId}/historical-evidence`, params),
   historicalContext: (timestamp, wellId = WELL_ID) => request(`/wells/${wellId}/historical-context`, { timestamp }),
   snapshot: (timestamp, wellId = WELL_ID) => request(`/wells/${wellId}/snapshot`, { timestamp }),
   features: (params = {}, wellId = WELL_ID) => request(`/wells/${wellId}/features`, params),
+  geometry: (params = {}, wellId = WELL_ID) => request(`/wells/${wellId}/geometry`, params),
+  offsets: (params = {}, wellId = WELL_ID) => request(`/wells/${wellId}/offsets`, params),
+  offsetIntelligence: (params = {}, wellId = WELL_ID) => request(`/wells/${wellId}/offset-intelligence`, params),
+
   
   // Guidance Engine
   currentGuidance: (wellId = WELL_ID) => request(`/wells/${wellId}/guidance/current`),

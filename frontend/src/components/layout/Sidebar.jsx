@@ -75,6 +75,11 @@ const NAV_GROUPS = [
         to: "/replay", 
         icon: HiOutlinePlayCircle 
       },
+      {
+        label: "3D Offset Intelligence",
+        to: "/offsets",
+        icon: HiOutlineCube
+      },
     ],
   },
   {

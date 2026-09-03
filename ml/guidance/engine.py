@@ -217,6 +217,20 @@ def evaluate_guidance(snapshot: Dict[str, Any]) -> GuidanceRecord:
         ]
         matched_rules.append((rule, basis_items, ["Developing statistical deviation observed in baseline z-scores."]))
 
+    # 4b. Check Look-Ahead offset historical risk interval
+    look_ahead_rec = snapshot.get("look_ahead") or {}
+    if isinstance(look_ahead_rec, dict) and look_ahead_rec.get("status") in ["AHEAD", "CURRENT"]:
+        rule = registry.get("G-APPROACHING-HISTORICAL-RISK-007")
+        if rule:
+            target_evt = look_ahead_rec.get("target_event_id") or "OFFSET_EVENT"
+            target_well = look_ahead_rec.get("target_offset_well_id") or "OFFSET_WELL"
+            dist_val = look_ahead_rec.get("tvd_ahead_start_ft") or look_ahead_rec.get("md_ahead_start_ft") or 0.0
+            basis_items = [
+                EvidenceBasis(source="OFFSET_LOOK_AHEAD", evidence=f"event_{target_evt}", details=f"target: {target_well}, dist: {dist_val:.0f} ft", semantics="DERIVED_ANALYTICAL")
+            ]
+            matched_rules.append((rule, basis_items, [f"Spatially relevant historical risk interval ({target_evt}) in offset {target_well} is {look_ahead_rec.get('status').lower()}."]))
+
+
     # 5. Fallback: Normal behavior
     if not matched_rules:
         rule = registry.get("G-NORMAL-BEHAVIOR-005")

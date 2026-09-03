@@ -106,5 +106,23 @@ RULES: List[GuidanceRuleDefinition] = [
             "1. Check telemetry stream quality and sensor coverage",
             "2. Verify data ingestion integrity"
         ]
+    ),
+    GuidanceRuleDefinition(
+        rule_id="G-APPROACHING-HISTORICAL-RISK-007",
+        condition="APPROACHING_HISTORICAL_RISK_INTERVAL",
+        guidance_level=GuidanceLevel.REVIEW,
+        required_evidence=["offset_look_ahead"],
+        review_parameters=["torque", "hookload", "rate_of_penetration", "weight_on_bit", "standpipe_pressure"],
+        title="Review Upcoming Offset Historical Risk Interval",
+        guidance_text="A spatially relevant offset historical risk interval is approaching in the current look-ahead window. Review torque, ROP, and hookload behavior alongside historical offset event precedent.",
+        limitation_text="Cross-well TVD mapping is an approximate correspondence. Operational adjustments are not prescribed without validated physics/geological models. Decision support only.",
+        provenance=build_heuristic_provenance("NWIS_OFFSET_INTELLIGENCE"),
+        recommended_review_path=[
+            "1. Review look-ahead distance (MD & TVD) to upcoming offset historical interval",
+            "2. Examine historical event details from relevant offset well",
+            "3. Monitor current drilling telemetry (torque, ROP, WOB) for early onset indicators",
+            "4. Engineer conducts operational risk evaluation"
+        ]
     )
 ]
+

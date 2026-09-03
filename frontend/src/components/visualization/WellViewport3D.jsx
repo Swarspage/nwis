@@ -394,6 +394,11 @@ export default function WellViewport3D({
         <Canvas
           camera={{ position: [6.5, 5, 8.5], fov: 35, near: 0.1, far: 500 }}
           gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+          onCreated={({ gl }) => {
+            gl.domElement.addEventListener("webglcontextlost", (event) => {
+              event.preventDefault();
+            }, false);
+          }}
           style={{ background: "transparent" }}
         >
           <SceneLighting riskScore={riskScore} />

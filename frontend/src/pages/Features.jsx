@@ -61,7 +61,7 @@ export default function Features() {
     pollMs
   );
 
-  if (telemetry.state === "loading") return <LoadingState lines={5} />;
+  if (telemetry.state === "loading") return <LoadingState variant="features" lines={6} />;
   if (telemetry.state === "error") return <ErrorState error={telemetry.error} />;
 
   const current = latest(telemetry.data?.records || []);

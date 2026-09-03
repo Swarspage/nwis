@@ -154,7 +154,7 @@ export default function Models() {
     pollMs
   );
 
-  if (models.state === "loading" || risk.state === "loading") return <LoadingState lines={5} />;
+  if (models.state === "loading" || risk.state === "loading") return <LoadingState variant="models" />;
   if (models.state === "error") return <ErrorState error={models.error} />;
   if (risk.state === "error") return <ErrorState error={risk.error} />;
 

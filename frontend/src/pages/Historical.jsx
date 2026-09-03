@@ -171,7 +171,7 @@ export default function Historical() {
     [selectedWell]
   );
 
-  if (historical.state === "loading") return <LoadingState lines={5} />;
+  if (historical.state === "loading") return <LoadingState variant="table" lines={6} />;
   if (historical.state === "error") return <ErrorState error={historical.error} />;
 
   const events = historical.data?.events || [];

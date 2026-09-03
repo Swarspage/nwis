@@ -327,7 +327,7 @@ export default function Overview() {
   const primaryLoading = risk.state === "loading" || telemetry.state === "loading";
   const primaryError = risk.state === "error";
 
-  if (primaryLoading) return <LoadingState lines={6} />;
+  if (primaryLoading) return <LoadingState variant="overview" />;
   if (primaryError) return <ErrorState error={risk.error} />;
 
   const riskData = risk.data;

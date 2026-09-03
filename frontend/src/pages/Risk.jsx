@@ -29,6 +29,7 @@ import DataTable from "../components/ui/DataTable.jsx";
 import ErrorState from "../components/ui/ErrorState.jsx";
 import LoadingState from "../components/ui/LoadingState.jsx";
 import EvidenceDrawer from "../components/dashboard/EvidenceDrawer.jsx";
+import { formatPercent, formatTimestamp, formatValue, safeArray } from "../utils/format.js";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -175,8 +176,14 @@ export default function Risk() {
     [selectedWell],
     pollMs
   );
+  const offsetIntel = useApiResource(
+    () => api.offsetIntelligence(ts ? { timestamp: ts } : {}, selectedWell).catch(() => null),
+    [ts, selectedWell],
+    pollMs
+  );
 
-  if (risk.state === "loading") return <LoadingState lines={5} />;
+
+  if (risk.state === "loading") return <LoadingState variant="risk" />;
   if (risk.state === "error") return <ErrorState error={risk.error} />;
 
   const riskData = risk.data;
@@ -443,6 +450,36 @@ export default function Risk() {
           </div>
         )}
       </Panel>
+
+      {/* Offset Intelligence Supporting Evidence Context */}
+      {offsetIntel.data && (
+        <Panel label="Offset Intelligence Context" title="Supporting Offset Evidence">
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span className={`badge ${offsetIntel.data.look_ahead?.status === "AHEAD" ? "badge-brass" : "badge-teal"}`} style={{ fontSize: "11px", fontWeight: "bold" }}>
+                  LOOK-AHEAD: {offsetIntel.data.look_ahead?.status || "UNAVAILABLE"}
+                </span>
+                {offsetIntel.data.look_ahead?.tvd_ahead_start_ft != null && (
+                  <span style={{ fontFamily: "var(--font-code)", fontSize: "var(--text-data-sm)", fontWeight: 600, color: "#92400E" }}>
+                    {offsetIntel.data.look_ahead.tvd_ahead_start_ft.toFixed(0)} ft TVD ahead
+                  </span>
+                )}
+              </div>
+              <Link to="/offsets" style={{ fontSize: "12px", color: "var(--color-signal-teal)", fontWeight: 600, textDecoration: "none" }}>
+                View 3D Offset Workspace →
+              </Link>
+            </div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-body-sm)", color: "var(--color-body)", margin: 0, lineHeight: 1.4 }}>
+              {offsetIntel.data.evidence_context?.summary_text}
+            </p>
+            <div style={{ fontSize: "11px", fontFamily: "var(--font-code)", color: "var(--color-mute)", background: "var(--color-canvas)", padding: "6px 10px", borderRadius: "6px" }}>
+              ℹ️ Note: Historical offset context is surfaced as supporting evidence; it does NOT alter the M0.8 0.45/0.55 telemetry risk score calculation in V1.
+            </div>
+          </div>
+        </Panel>
+      )}
+
 
       {/* Layer Contributions chart */}
       <Panel label="Layer Contributions">

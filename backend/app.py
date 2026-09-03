@@ -188,14 +188,18 @@ def get_models(well_id: str, timestamp: Optional[str] = None, start_time: Option
 @app.get("/api/v1/wells/{well_id}/historical-events")
 def get_historical_events(well_id: str):
     _validate_well(well_id)
-    events = data_service.get_dataset(well_id, "historical_events")
-    count = len(events)
-    return {
-        "well_id": well_id,
-        "count": count,
-        "events": events,
-        "status": "NO_VERIFIED_HISTORICAL_EVENTS_AVAILABLE" if count == 0 else "OK"
-    }
+    return data_service.get_historical_evidence(well_id)
+
+@app.get("/api/v1/wells/{well_id}/historical-evidence")
+def get_historical_evidence(well_id: str, timestamp: Optional[str] = None):
+    _validate_well(well_id)
+    if timestamp:
+        _validate_timestamp(timestamp)
+        ts = _clamp_to_sim_time(well_id, timestamp)
+    else:
+        ts = None
+    return data_service.get_historical_evidence(well_id, ts)
+
 
 @app.get("/api/v1/wells/{well_id}/historical-context")
 def get_historical_context_endpoint(well_id: str, timestamp: str):
@@ -281,4 +285,28 @@ def get_guidance(well_id: str, timestamp: Optional[str] = None):
     guidance = evaluate_guidance(snap)
     return guidance.model_dump()
 
+@app.get("/api/v1/wells/{well_id}/geometry")
+def get_geometry(well_id: str, timestamp: Optional[str] = None):
+    _validate_well(well_id)
+    ts = _clamp_to_sim_time(well_id, timestamp) if timestamp else simulation_clock.get_current_time_iso()
+    geom = data_service.get_geometry(well_id, ts)
+    return geom.model_dump()
+
+@app.get("/api/v1/wells/{well_id}/offsets")
+def get_offsets(well_id: str, timestamp: Optional[str] = None):
+    _validate_well(well_id)
+    ts = _clamp_to_sim_time(well_id, timestamp) if timestamp else simulation_clock.get_current_time_iso()
+    relationships = data_service.get_offsets(well_id, ts)
+    return [r.model_dump() for r in relationships]
+
+@app.get("/api/v1/wells/{well_id}/offset-intelligence")
+def get_offset_intelligence(well_id: str, timestamp: Optional[str] = None, look_ahead_window: Optional[float] = 500.0):
+    _validate_well(well_id)
+    if timestamp:
+        _validate_timestamp(timestamp)
+        ts = _clamp_to_sim_time(well_id, timestamp)
+    else:
+        ts = simulation_clock.get_current_time_iso() if well_id != "WELL-1" else None
+        
+    return data_service.get_offset_intelligence(well_id, ts, look_ahead_window_ft=look_ahead_window or 500.0)
 

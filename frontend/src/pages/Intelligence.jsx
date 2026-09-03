@@ -191,7 +191,7 @@ export default function Intelligence() {
     pollMs
   );
 
-  if (intelligence.state === "loading") return <LoadingState lines={5} />;
+  if (intelligence.state === "loading") return <LoadingState variant="intelligence" />;
   if (intelligence.state === "error") return <ErrorState error={intelligence.error} />;
 
   const records = intelligence.data?.records || [];
