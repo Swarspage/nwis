@@ -1,8 +1,6 @@
 import Badge from "../ui/Badge.jsx";
-import Card from "../ui/Card.jsx";
-import DataTable from "../ui/DataTable.jsx";
-import SectionHeader from "../ui/SectionHeader.jsx";
-import { formatPercent, formatValue, modelDisplayName, safeArray, titleize } from "../../utils/format.js";
+import { formatPercent, formatValue, modelDisplayName, titleize } from "../../utils/format.js";
+import { HiOutlineCpuChip } from "react-icons/hi2";
 import "./dashboard.css";
 
 export default function ModelEvidence({ records = [], prototype }) {
@@ -12,44 +10,92 @@ export default function ModelEvidence({ records = [], prototype }) {
   }));
 
   return (
-    <Card className="model-evidence-card">
-      <SectionHeader
-        title="M0.6 Model Evidence"
-        description="Statistical model outputs are separated by model and are not physical event confirmations."
-      />
-      <DataTable
-        rows={rows}
-        columns={[
-          { key: "displayName", header: "Model" },
-          { key: "status", header: "Status", render: (row) => titleize(row.status) },
-          { key: "label", header: "Output label", render: (row) => titleize(row.label) },
-          { key: "score", header: "Score", render: (row) => formatValue(row.score) },
-          { key: "confidence", header: "Confidence", render: (row) => formatPercent(row.confidence) },
-          { key: "feature_coverage", header: "Coverage", render: (row) => formatPercent(row.feature_coverage) },
-        ]}
-        empty="No model records returned."
-      />
-      {prototype ? (
-        <div className="state-panel" style={{ marginTop: "var(--space-lg)" }}>
-          <div className="model-head">
+    <div className="dashboard-card-light">
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+        <div>
+          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "var(--color-ink, #0A2540)", fontFamily: "var(--font-display)" }}>
+            M0.6 Model Evidence
+          </h3>
+          <p style={{ margin: "2px 0 0", fontSize: 12, color: "var(--color-body, #5B6B7A)" }}>
+            Statistical model outputs are separated by model and are not physical event confirmations.
+          </p>
+        </div>
+        <HiOutlineCpuChip style={{ fontSize: 22, color: "var(--color-signal-teal, #1E8A8A)" }} />
+      </div>
+
+      <div className="light-table-container">
+        <table className="light-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Status</th>
+              <th>Output Label</th>
+              <th>Score</th>
+              <th>Confidence</th>
+              <th>Coverage</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.length > 0 ? (
+              rows.map((row, i) => (
+                <tr key={i}>
+                  <td style={{ fontWeight: 600, color: "var(--color-ink, #0A2540)" }}>{row.displayName}</td>
+                  <td>
+                    <span className="evidence-badge normal">{titleize(row.status)}</span>
+                  </td>
+                  <td className="light-table-code">{titleize(row.label)}</td>
+                  <td style={{ fontFamily: "var(--font-code)", fontWeight: 700, color: "var(--color-signal-teal, #1E8A8A)" }}>
+                    {formatValue(row.score)}
+                  </td>
+                  <td style={{ fontFamily: "var(--font-code)" }}>{formatPercent(row.confidence)}</td>
+                  <td style={{ fontFamily: "var(--font-code)" }}>{formatPercent(row.feature_coverage)}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} style={{ textAlign: "center", color: "var(--color-mute, #8C99A6)", padding: 20 }}>
+                  No model records returned.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {prototype && (
+        <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid var(--color-hairline, #DFE6E3)" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
             <div>
-              <h3 className="state-title" style={{ fontSize: "14px", fontWeight: 600 }}>
+              <h4 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "var(--color-ink, #0A2540)" }}>
                 Prototype Random Forest
-              </h3>
-              <p className="state-copy" style={{ fontSize: "11px", marginTop: 2 }}>
+              </h4>
+              <p style={{ margin: "2px 0 0", fontSize: 10, color: "var(--color-brass, #C77A2E)", letterSpacing: "0.03em" }}>
                 SYNTHETIC DEMO · NOT REAL-WORLD VALIDATED · NOT USED IN CURRENT RISK SCORE
               </p>
             </div>
             <Badge tone="strong">{prototype.data_origin || "SYNTHETIC_DEMO"}</Badge>
           </div>
-          <dl className="data-kv" style={{ gridTemplateColumns: "repeat(4, minmax(0, 1fr))", marginTop: 12 }}>
-            <div><dt>Prediction</dt><dd>{titleize(prototype.prediction)}</dd></div>
-            <div><dt>Probability</dt><dd>{formatPercent(prototype.probability)}</dd></div>
-            <div><dt>Used in risk score</dt><dd>{formatValue(prototype.used_in_risk_score)}</dd></div>
-            <div><dt>Validation status</dt><dd>{titleize(prototype.validation_status)}</dd></div>
-          </dl>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 12 }}>
+            <div className="metric-card-light">
+              <div className="metric-card-label">Prediction</div>
+              <div className="metric-card-value">{titleize(prototype.prediction)}</div>
+            </div>
+            <div className="metric-card-light">
+              <div className="metric-card-label">Probability</div>
+              <div className="metric-card-value">{formatPercent(prototype.probability)}</div>
+            </div>
+            <div className="metric-card-light">
+              <div className="metric-card-label">Used In Risk Score</div>
+              <div className="metric-card-value">{formatValue(prototype.used_in_risk_score)}</div>
+            </div>
+            <div className="metric-card-light">
+              <div className="metric-card-label">Validation</div>
+              <div className="metric-card-value">{titleize(prototype.validation_status)}</div>
+            </div>
+          </div>
         </div>
-      ) : null}
-    </Card>
+      )}
+    </div>
   );
 }

@@ -13,7 +13,8 @@ def test_01_health():
 def test_02_list_wells():
     res = client.get("/api/v1/wells")
     assert res.status_code == 200
-    assert len(res.json()["wells"]) == 1
+    assert len(res.json()["wells"]) == 6
+
 
 def test_03_well_summary():
     res = client.get("/api/v1/wells/WELL-1/summary")
@@ -161,5 +162,23 @@ def test_26_backend_purity():
         risk = client.get(f"/api/v1/wells/WELL-1/risk?timestamp={quote(ts)}").json()
         assert snap["risk"] == risk
 
+def test_27_guidance_current():
+    res = client.get("/api/v1/wells/WELL-2/guidance/current")
+    assert res.status_code == 200
+    data = res.json()
+    assert "guidance_level" in data
+    assert "guidance_status" in data
+    assert data["operational_action"] is None
+
+def test_28_guidance_timestamped():
+    timeline = client.get("/api/v1/wells/WELL-1/risk/timeline?limit=1")
+    if timeline.status_code == 200 and timeline.json()["count"] > 0:
+        ts = timeline.json()["records"][0]["timestamp"]
+        res = client.get(f"/api/v1/wells/WELL-1/guidance?timestamp={quote(ts)}")
+        assert res.status_code == 200
+        assert res.json()["well_id"] == "WELL-1"
+        assert res.json()["operational_action"] is None
+
 if __name__ == "__main__":
     pytest.main(["-v", __file__])
+

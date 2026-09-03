@@ -43,3 +43,24 @@ class SnapshotResponse(BaseModel):
     models: List[Dict[str, Any]]
     historical_context: Dict[str, Any]
     provenance: Dict[str, Any]
+
+class GuidanceResponse(BaseModel):
+    well_id: str
+    timestamp: Optional[str] = None
+    data_origin: str
+    guidance_status: str
+    guidance_level: str
+    title: str
+    summary: str
+    observations: List[str]
+    basis: List[Dict[str, Any]]
+    review_parameters: List[str]
+    available_parameters: List[str]
+    unavailable_parameters: List[str]
+    recommended_review_path: List[str]
+    operational_action: Optional[str] = None
+    limitations: List[str]
+    provenance: Dict[str, Any]
+    rule_id: str
+    supporting_guidance: List[Dict[str, Any]]
+

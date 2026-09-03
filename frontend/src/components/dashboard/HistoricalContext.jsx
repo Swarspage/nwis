@@ -1,8 +1,8 @@
-import Card from "../ui/Card.jsx";
 import EmptyState from "../ui/EmptyState.jsx";
-import SectionHeader from "../ui/SectionHeader.jsx";
 import { formatValue } from "../../utils/format.js";
 import { useAppState } from "../../app/AppState.jsx";
+import { HiOutlineClock } from "react-icons/hi2";
+import "./dashboard.css";
 
 export default function HistoricalContext({ historical }) {
   const { selectedWell } = useAppState();
@@ -18,22 +18,35 @@ export default function HistoricalContext({ historical }) {
     : `No authoritative historical event documentation is currently available in the repository for ${selectedWell}. This is not an error.`;
 
   return (
-    <Card style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <SectionHeader
-        title="M0.7 Historical Context"
-        description={description}
-      />
+    <div className="dashboard-card-light" style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16 }}>
+        <div>
+          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "var(--color-ink, #0A2540)", fontFamily: "var(--font-display)" }}>
+            M0.7 Historical Context
+          </h3>
+          <p style={{ margin: "2px 0 0", fontSize: 12, color: "var(--color-body, #5B6B7A)" }}>
+            {description}
+          </p>
+        </div>
+        <HiOutlineClock style={{ fontSize: 20, color: "var(--color-signal-teal, #1E8A8A)" }} />
+      </div>
+
       {count === 0 ? (
         <EmptyState title="NO VERIFIED HISTORICAL EVENTS AVAILABLE">
           {emptyText}
         </EmptyState>
       ) : (
-        <dl className="data-kv">
-          <div><dt>Events</dt><dd>{formatValue(count)}</dd></div>
-          <div><dt>Status</dt><dd>{historical?.status || "OK"}</dd></div>
-        </dl>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 12 }}>
+          <div className="metric-card-light">
+            <div className="metric-card-label">Events Count</div>
+            <div className="metric-card-value">{formatValue(count)}</div>
+          </div>
+          <div className="metric-card-light">
+            <div className="metric-card-label">Status</div>
+            <div className="metric-card-value">{historical?.status || "OK"}</div>
+          </div>
+        </div>
       )}
-    </Card>
+    </div>
   );
 }
-

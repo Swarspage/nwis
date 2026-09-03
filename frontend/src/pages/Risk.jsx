@@ -30,7 +30,12 @@ import ErrorState from "../components/ui/ErrorState.jsx";
 import LoadingState from "../components/ui/LoadingState.jsx";
 import EvidenceDrawer from "../components/dashboard/EvidenceDrawer.jsx";
 import { useState } from "react";
-import { formatPercent, formatTimestamp, formatValue, safeArray, titleize } from "../utils/format.js";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+
+
+
+
 
 function riskScoreColor(score) {
   if (score == null) return "var(--color-mute)";
@@ -214,7 +219,14 @@ export default function Risk() {
   };
 
   return (
-    <div className="page">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="page"
+      style={{ gap: "14px" }}
+    >
+
       {/* Evidence Drawer */}
       <EvidenceDrawer
         open={!!drawerEvidence}
@@ -283,6 +295,51 @@ export default function Risk() {
           </div>
         </div>
       </Panel>
+
+      {/* Engineering Attention Compact Panel */}
+      <div
+        style={{
+          background: "var(--color-surface, #FFFFFF)",
+          border: "1px solid var(--color-hairline, #DFE6E3)",
+          borderRadius: "var(--radius-lg, 14px)",
+          padding: "16px 20px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          boxShadow: "0 2px 8px rgba(10,37,64,0.04)"
+        }}
+      >
+        <div>
+          <div style={{ fontSize: "11px", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.8px", color: "var(--color-signal-teal, #1E8A8A)" }}>
+            ENGINEERING ATTENTION
+          </div>
+          <div style={{ fontSize: "14px", fontWeight: "600", color: "var(--color-ink, #0A2540)", marginTop: "2px" }}>
+            Evidence-Grounded Decision Support Available
+          </div>
+          <div style={{ fontSize: "12px", color: "var(--color-body, #5B6B7A)", marginTop: "2px" }}>
+            Review structured guidance and decision-support workflow derived from current M0.5–M0.8 state.
+          </div>
+        </div>
+        <Link
+          to="/guidance"
+          style={{
+            background: "var(--color-ink, #0A2540)",
+            color: "#FFFFFF",
+            padding: "8px 16px",
+            borderRadius: "8px",
+            fontSize: "13px",
+            fontWeight: "600",
+            textDecoration: "none",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
+            whiteSpace: "nowrap"
+          }}
+        >
+          Open Engineering Guidance →
+        </Link>
+      </div>
+
 
       {/* Risk Drivers (M0.5 evidence ordered by contribution) */}
       <Panel
@@ -403,6 +460,7 @@ export default function Risk() {
           selectedTimestamp={ts || simulationState?.current_sim_time}
         />
       </Panel>
-    </div>
+    </motion.div>
   );
 }
+

@@ -18,11 +18,13 @@
  *
  * Cross-panel: clicking a relevant well sets focusContext.well
  */
+import { motion } from "framer-motion";
 import { useAppState } from "../app/AppState.jsx";
 import { useFocusContext, useFocusKeyHandler, FocusBanner, FOCUS_TYPES } from "../components/ui/FocusContext.jsx";
 import { useApiResource } from "../api/hooks.js";
 import { api } from "../api/client.js";
 import Panel from "../components/ui/Panel.jsx";
+
 import DataTable from "../components/ui/DataTable.jsx";
 import DataQualityBadge from "../components/ui/DataQualityBadge.jsx";
 import ErrorState from "../components/ui/ErrorState.jsx";
@@ -176,7 +178,14 @@ export default function Historical() {
   const relevantWells = context.data?.relevant_wells || context.data?.comparable_wells || [];
 
   return (
-    <div className="page">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="page"
+      style={{ gap: "14px" }}
+    >
+
       {/* Page header */}
       <div style={{ marginBottom: "var(--space-sm)" }}>
         <div style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-label-sm)", color: "var(--color-mute)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
@@ -345,6 +354,7 @@ export default function Historical() {
           ))}
         </div>
       </Panel>
-    </div>
+    </motion.div>
   );
 }
+

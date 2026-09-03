@@ -1,41 +1,12 @@
-/**
- * EvidenceDrawer — Right-side slide-over panel for deep evidence inspection.
- *
- * Opened from: Intelligence evidence cards, Risk drivers, Telemetry anomaly markers.
- *
- * Structure:
- *   1. Signal header (feature key + direction)
- *   2. Signal metrics (value, z-score, contribution)
- *   3. Model evidence (which M0.6 models flag this)
- *   4. Data provenance
- *   5. Engineering review note (cautious language only)
- *
- * Props:
- *   open      — boolean
- *   onClose   — function
- *   evidence  — evidence item from API (feature, direction, contribution, z_score, explanation)
- *   models    — array of M0.6 model records (to find model references to this feature)
- *   telemetry — current telemetry record (for live channel value)
- */
 import { useEffect } from "react";
 import { titleize } from "../../utils/format.js";
+import { HiXMark } from "react-icons/hi2";
+import "./dashboard.css";
 
 function DrawerSection({ title, children }) {
   return (
-    <div style={{ borderTop: "1px solid var(--color-hairline)", paddingTop: "var(--space-md)" }}>
-      <div
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: "var(--text-label-sm)",
-          fontWeight: "var(--weight-medium)",
-          color: "var(--color-mute)",
-          textTransform: "uppercase",
-          letterSpacing: "0.06em",
-          marginBottom: "var(--space-sm)",
-        }}
-      >
-        {title}
-      </div>
+    <div className="drawer-section-card-light">
+      <div className="drawer-section-title-light">{title}</div>
       {children}
     </div>
   );
@@ -43,22 +14,14 @@ function DrawerSection({ title, children }) {
 
 function KV({ label, value, mono = false }) {
   return (
-    <div style={{ marginBottom: "var(--space-xs)" }}>
-      <div
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: "11px",
-          color: "var(--color-mute)",
-          marginBottom: 2,
-        }}
-      >
-        {label}
-      </div>
+    <div style={{ marginBottom: 6 }}>
+      <div style={{ fontSize: 11, color: "var(--color-slate, #3E5164)", marginBottom: 2 }}>{label}</div>
       <div
         style={{
           fontFamily: mono ? "var(--font-code)" : "var(--font-body)",
-          fontSize: mono ? "var(--text-data-sm)" : "var(--text-body-sm)",
-          color: "var(--color-ink)",
+          fontSize: mono ? 13 : 13.5,
+          fontWeight: 600,
+          color: "var(--color-ink, #0A2540)",
         }}
       >
         {value ?? "—"}
@@ -71,7 +34,9 @@ export default function EvidenceDrawer({ open, onClose, evidence, models = [], t
   // Close on ESC
   useEffect(() => {
     if (!open) return;
-    const handler = (e) => { if (e.key === "Escape") onClose(); };
+    const handler = (e) => {
+      if (e.key === "Escape") onClose();
+    };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [open, onClose]);
@@ -85,7 +50,6 @@ export default function EvidenceDrawer({ open, onClose, evidence, models = [], t
     .replace(/\b\w/g, (l) => l.toUpperCase());
 
   const isHigh = evidence.direction === "HIGH" || evidence.direction === "ELEVATED";
-  const directionColor = isHigh ? "var(--color-rust)" : "var(--color-signal-teal)";
 
   // Find M0.6 model evidence for this feature
   const modelEvidence = models.flatMap((m) =>
@@ -106,134 +70,61 @@ export default function EvidenceDrawer({ open, onClose, evidence, models = [], t
         style={{
           position: "fixed",
           inset: 0,
-          background: "rgba(10,37,64,0.12)",
-          zIndex: 200,
+          background: "rgba(10, 37, 64, 0.25)",
+          backdropFilter: "blur(2px)",
+          zIndex: 290,
         }}
       />
 
       {/* Drawer panel */}
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          right: 0,
-          bottom: 0,
-          width: "clamp(320px, 38vw, 480px)",
-          background: "var(--color-surface)",
-          borderLeft: "1px solid var(--color-hairline)",
-          boxShadow: "-4px 0 24px rgba(10,37,64,0.10)",
-          zIndex: 201,
-          display: "flex",
-          flexDirection: "column",
-          overflowY: "auto",
-          animation: "slide-in var(--motion-slow) var(--ease-emphasis)",
-        }}
-      >
+      <div className="evidence-drawer-light">
         {/* Header */}
-        <div
-          style={{
-            padding: "var(--space-lg)",
-            borderBottom: "1px solid var(--color-hairline)",
-            background: "var(--color-canvas)",
-            position: "sticky",
-            top: 0,
-            zIndex: 1,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "var(--space-sm)" }}>
-            <div>
-              <div
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "var(--text-label-sm)",
-                  color: "var(--color-mute)",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.06em",
-                  marginBottom: 4,
-                }}
-              >
-                Evidence Detail
-              </div>
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "var(--text-heading-md)",
-                  fontWeight: "var(--weight-medium)",
-                  color: "var(--color-ink)",
-                  lineHeight: 1.3,
-                }}
-              >
-                {featureLabel}
-              </div>
-              {evidence.direction && (
-                <span
-                  style={{
-                    display: "inline-block",
-                    marginTop: 6,
-                    fontFamily: "var(--font-code)",
-                    fontSize: "10px",
-                    fontWeight: "var(--weight-medium)",
-                    padding: "2px 8px",
-                    borderRadius: "var(--radius-pill)",
-                    background: isHigh ? "rgba(179,38,30,0.1)" : "rgba(30,138,138,0.1)",
-                    color: directionColor,
-                  }}
-                >
-                  {evidence.direction}
-                </span>
-              )}
+        <div className="drawer-header-light">
+          <div>
+            <div style={{ fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--color-slate, #3E5164)", marginBottom: 4 }}>
+              Deep Inspection
             </div>
-            <button
-              onClick={onClose}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                color: "var(--color-mute)",
-                fontSize: 18,
-                lineHeight: 1,
-                padding: 4,
-                borderRadius: "var(--radius-sm)",
-                flexShrink: 0,
-              }}
-              title="Close (Esc)"
-            >
-              ✕
-            </button>
+            <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "var(--color-ink, #0A2540)", fontFamily: "var(--font-display)" }}>
+              {featureLabel}
+            </h3>
+            {evidence.direction && (
+              <span
+                className={`evidence-badge ${isHigh ? "high" : "normal"}`}
+                style={{ marginTop: 6, display: "inline-block" }}
+              >
+                {evidence.direction}
+              </span>
+            )}
           </div>
+          <button type="button" onClick={onClose} className="drawer-close-btn-light" title="Close (Esc)">
+            <HiXMark />
+          </button>
         </div>
 
         {/* Body */}
-        <div
-          style={{
-            padding: "var(--space-lg)",
-            display: "flex",
-            flexDirection: "column",
-            gap: "var(--space-md)",
-          }}
-        >
+        <div style={{ padding: 20 }}>
           {/* Current Signal */}
-          <DrawerSection title="Current Signal">
+          <DrawerSection title="Current Telemetry Signal">
             {channelValue !== undefined && channelValue !== null ? (
-              <div style={{ display: "flex", gap: "var(--space-lg)", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: 20 }}>
                 <div>
-                  <div style={{ fontFamily: "var(--font-body)", fontSize: "11px", color: "var(--color-mute)", marginBottom: 2 }}>Live Value</div>
-                  <div style={{ fontFamily: "var(--font-code)", fontSize: "var(--text-data-md)", color: "var(--color-ink)" }}>
+                  <div style={{ fontSize: 11, color: "var(--color-slate, #3E5164)" }}>Live Value</div>
+                  <div style={{ fontFamily: "var(--font-code)", fontSize: 16, fontWeight: 700, color: "var(--color-signal-teal, #1E8A8A)" }}>
                     {typeof channelValue === "number" ? channelValue.toFixed(2) : channelValue}
                     {channelUnit ? ` ${channelUnit}` : ""}
                   </div>
                 </div>
               </div>
             ) : (
-              <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-body-sm)", color: "var(--color-mute)", margin: 0, fontStyle: "italic" }}>
-                Channel value not available in current telemetry.
+              <p style={{ margin: 0, fontSize: 12, color: "var(--color-mute, #8C99A6)", fontStyle: "italic" }}>
+                Channel value not available in current telemetry payload.
               </p>
             )}
           </DrawerSection>
 
           {/* M0.5 Evidence Metrics */}
           <DrawerSection title="M0.5 Deterministic Evidence">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-sm)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               {evidence.contribution != null && (
                 <KV
                   label="Contribution"
@@ -250,55 +141,42 @@ export default function EvidenceDrawer({ open, onClose, evidence, models = [], t
               )}
             </div>
             {evidence.explanation && (
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "var(--text-body-sm)",
-                  color: "var(--color-body)",
-                  lineHeight: "var(--leading-body-sm)",
-                  margin: "var(--space-sm) 0 0",
-                }}
-              >
+              <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "var(--color-body, #5B6B7A)", lineHeight: 1.5 }}>
                 {evidence.explanation}
               </p>
             )}
           </DrawerSection>
 
           {/* M0.6 Model Evidence */}
-          <DrawerSection title="M0.6 Model Evidence">
+          <DrawerSection title="M0.6 Statistical Model Cross-Reference">
             {modelEvidence.length > 0 ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-xs)" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {modelEvidence.map((me, i) => (
                   <div
                     key={i}
                     style={{
-                      background: "var(--color-surface-sunken)",
-                      border: "1px solid var(--color-hairline)",
-                      borderRadius: "var(--radius-sm)",
-                      padding: "8px 10px",
+                      background: "var(--color-surface, #FFFFFF)",
+                      border: "1px solid var(--color-hairline, #DFE6E3)",
+                      borderRadius: 6,
+                      padding: "8px 12px",
                       display: "flex",
-                      gap: "var(--space-md)",
-                      flexWrap: "wrap",
+                      alignItems: "center",
+                      justifyContent: "space-between",
                     }}
                   >
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: "11px", color: "var(--color-slate)", fontWeight: "var(--weight-medium)" }}>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: "var(--color-ink, #0A2540)" }}>
                       {titleize(me.model)}
                     </span>
                     {me.contribution != null && (
-                      <span style={{ fontFamily: "var(--font-code)", fontSize: "11px", color: "var(--color-ink)" }}>
+                      <span style={{ fontFamily: "var(--font-code)", fontSize: 12, color: "var(--color-signal-teal, #1E8A8A)", fontWeight: 600 }}>
                         {(me.contribution * 100).toFixed(1)}%
-                      </span>
-                    )}
-                    {me.direction && (
-                      <span style={{ fontFamily: "var(--font-code)", fontSize: "10px", color: me.direction === "HIGH" ? "var(--color-rust)" : "var(--color-signal-teal)" }}>
-                        {me.direction}
                       </span>
                     )}
                   </div>
                 ))}
               </div>
             ) : (
-              <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-body-sm)", color: "var(--color-mute)", margin: 0, fontStyle: "italic" }}>
+              <p style={{ margin: 0, fontSize: 12, color: "var(--color-mute, #8C99A6)", fontStyle: "italic" }}>
                 No M0.6 model evidence cross-references this feature.
               </p>
             )}
@@ -306,27 +184,26 @@ export default function EvidenceDrawer({ open, onClose, evidence, models = [], t
 
           {/* Data Provenance */}
           <DrawerSection title="Data Provenance">
-            <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-body-sm)", color: "var(--color-body)", margin: 0, lineHeight: "var(--leading-body-sm)" }}>
-              This evidence was generated by M0.5 deterministic intelligence from the M0.4 canonical feature payload. 
-              Feature key: <span style={{ fontFamily: "var(--font-code)", fontSize: "var(--text-data-sm)", color: "var(--color-ink)" }}>{featureKey || "—"}</span>.
+            <p style={{ margin: 0, fontSize: 12, color: "var(--color-body, #5B6B7A)", lineHeight: 1.5 }}>
+              Generated by M0.5 deterministic intelligence from M0.4 feature key:{" "}
+              <span style={{ fontFamily: "var(--font-code)", color: "var(--color-signal-teal, #1E8A8A)", fontWeight: 600 }}>{featureKey || "—"}</span>.
             </p>
           </DrawerSection>
 
           {/* Engineering Review */}
-          <DrawerSection title="Engineering Review">
+          <DrawerSection title="Engineering Guidance">
             <div
               style={{
-                background: "var(--color-canvas-deep)",
-                border: "1px solid var(--color-hairline)",
-                borderLeft: "3px solid var(--color-slate)",
-                borderRadius: "var(--radius-sm)",
-                padding: "10px 14px",
+                background: "var(--color-signal-teal-soft, #E3F2F0)",
+                border: "1px solid rgba(30, 138, 138, 0.3)",
+                borderLeft: "3px solid var(--color-signal-teal, #1E8A8A)",
+                borderRadius: 6,
+                padding: "10px 12px",
               }}
             >
-              <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-body-sm)", color: "var(--color-body)", margin: 0, lineHeight: "var(--leading-body-sm)" }}>
-                Review current {featureLabel.toLowerCase()} behaviour in context with related parameters.
+              <p style={{ margin: 0, fontSize: 12, color: "var(--color-ink, #0A2540)", lineHeight: 1.5 }}>
+                Review current {featureLabel.toLowerCase()} behavior in context with related parameters.
                 Anomaly scores are statistical observations — not confirmed drilling events.
-                Engineering judgement is required.
               </p>
             </div>
           </DrawerSection>

@@ -27,7 +27,8 @@ def build_snapshot(well_id: str, timestamp: str):
     risk_rec = data_service.get_latest_before_or_at(data_service.risk, data_service.risk_ts, timestamp)
     tel_rec = data_service.get_latest_before_or_at(data_service.telemetry, data_service.telemetry_ts, timestamp)
     int_rec = data_service.get_latest_before_or_at(data_service.intelligence, data_service.intelligence_ts, timestamp)
-    mod_recs = data_service.get_models_at(timestamp)
+    mod_recs = data_service.get_models_at(well_id, timestamp)
+
     
     # Use exact timestamp if exact match, otherwise use the closest previous timestamp from risk_rec
     effective_ts = risk_rec.get("timestamp") if risk_rec else timestamp

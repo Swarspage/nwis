@@ -14,7 +14,9 @@
  * Depth shows "Unavailable" when null — never fabricated.
  */
 import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import { api } from "../api/client.js";
+
 import { useApiResource } from "../api/hooks.js";
 import { useAppState } from "../app/AppState.jsx";
 import { useFocusContext, useFocusKeyHandler, FocusBanner, FOCUS_TYPES } from "../components/ui/FocusContext.jsx";
@@ -119,7 +121,14 @@ export default function Telemetry() {
   };
 
   return (
-    <div className="page">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="page"
+      style={{ gap: "14px" }}
+    >
+
       {/* Page header */}
       <div style={{ marginBottom: "var(--space-sm)" }}>
         <div
@@ -333,6 +342,7 @@ export default function Telemetry() {
           empty="No telemetry values returned by the API."
         />
       </Panel>
-    </div>
+    </motion.div>
   );
 }
+

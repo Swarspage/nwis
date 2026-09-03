@@ -18,7 +18,11 @@
  * Live polling follows global simulation state.
  */
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { api } from "../api/client.js";
+
+
 import { useApiResource } from "../api/hooks.js";
 import { useAppState } from "../app/AppState.jsx";
 import { useFocusContext, useFocusKeyHandler, FocusBanner, FOCUS_TYPES } from "../components/ui/FocusContext.jsx";
@@ -219,7 +223,14 @@ export default function Intelligence() {
   };
 
   return (
-    <div className="page">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="page"
+      style={{ gap: "14px" }}
+    >
+
       {/* Evidence Drawer */}
       <EvidenceDrawer
         open={!!drawerEvidence}
@@ -338,12 +349,30 @@ export default function Intelligence() {
         label="Why NWIS Flagged This"
         title="Evidence"
         headerRight={
-          evidence.length > 0 && (
-            <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-body-sm)", color: "var(--color-mute)" }}>
-              Click evidence to inspect detail
-            </span>
-          )
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            {evidence.length > 0 && (
+              <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-body-sm)", color: "var(--color-mute)" }}>
+                Click evidence to inspect detail
+              </span>
+            )}
+            <Link
+              to="/guidance"
+              style={{
+                fontSize: "12px",
+                fontWeight: "600",
+                color: "var(--color-signal-teal, #1E8A8A)",
+                textDecoration: "none",
+                background: "var(--color-signal-teal-soft, #EBF5F5)",
+                padding: "4px 10px",
+                borderRadius: "12px",
+                border: "1px solid var(--color-hairline, #DFE6E3)"
+              }}
+            >
+              Review Engineering Guidance →
+            </Link>
+          </div>
         }
+
       >
         {evidence.length > 0 ? (
           <div
@@ -481,6 +510,7 @@ export default function Intelligence() {
           />
         </Panel>
       )}
-    </div>
+    </motion.div>
   );
 }
+

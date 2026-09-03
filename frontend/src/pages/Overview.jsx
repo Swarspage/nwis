@@ -14,10 +14,6 @@ import ErrorState from "../components/ui/ErrorState.jsx";
 import LoadingState from "../components/ui/LoadingState.jsx";
 import { formatTimestamp, latest, titleize } from "../utils/format.js";
 
-// Well context bar colors
-const WELL_BAR_BG = "#0A2540";
-const WELL_BAR_TEXT = "#EAF0EE";
-
 function WellContextBar({ wellId, isLive, isSynthetic, simulationState, timestamp }) {
   const modeLabel = isLive ? "Live Simulation" : "Replay";
   const dataOriginLabel = isSynthetic ? "Synthetic Demo" : "Historical Source";
@@ -26,13 +22,16 @@ function WellContextBar({ wellId, isLive, isSynthetic, simulationState, timestam
   return (
     <div
       style={{
-        background: WELL_BAR_BG,
-        borderRadius: "var(--radius-lg)",
+        background: "var(--color-surface, #FFFFFF)",
+        border: "1px solid var(--color-hairline, #DFE6E3)",
+        boxShadow: "0 2px 10px rgba(10, 37, 64, 0.04)",
+        borderRadius: "var(--radius-lg, 14px)",
         padding: "14px 20px",
         display: "flex",
         alignItems: "center",
-        gap: "var(--space-lg)",
+        gap: "var(--space-lg, 24px)",
         flexWrap: "wrap",
+        transition: "all 0.2s ease",
       }}
     >
       {/* Well ID */}
@@ -40,9 +39,9 @@ function WellContextBar({ wellId, isLive, isSynthetic, simulationState, timestam
         <div
           style={{
             fontFamily: "var(--font-code)",
-            fontSize: "var(--text-data-lg)",
-            fontWeight: "var(--weight-medium)",
-            color: WELL_BAR_TEXT,
+            fontSize: "var(--text-data-lg, 20px)",
+            fontWeight: "700",
+            color: "var(--color-ink, #0A2540)",
             lineHeight: 1.2,
           }}
         >
@@ -51,8 +50,8 @@ function WellContextBar({ wellId, isLive, isSynthetic, simulationState, timestam
         <div
           style={{
             fontFamily: "var(--font-body)",
-            fontSize: "var(--text-label-sm)",
-            color: "rgba(234,240,238,0.55)",
+            fontSize: "var(--text-label-sm, 12px)",
+            color: "var(--color-body, #5B6B7A)",
             marginTop: 2,
           }}
         >
@@ -61,7 +60,7 @@ function WellContextBar({ wellId, isLive, isSynthetic, simulationState, timestam
       </div>
 
       {/* Divider */}
-      <div style={{ width: 1, height: 32, background: "rgba(234,240,238,0.15)" }} />
+      <div style={{ width: 1, height: 32, background: "var(--color-hairline, #DFE6E3)" }} />
 
       {/* Mode pill */}
       <div
@@ -74,8 +73,8 @@ function WellContextBar({ wellId, isLive, isSynthetic, simulationState, timestam
         <div
           style={{
             fontFamily: "var(--font-body)",
-            fontSize: "var(--text-label-sm)",
-            color: "rgba(234,240,238,0.55)",
+            fontSize: "var(--text-label-sm, 12px)",
+            color: "var(--color-body, #5B6B7A)",
           }}
         >
           Mode
@@ -86,9 +85,9 @@ function WellContextBar({ wellId, isLive, isSynthetic, simulationState, timestam
             alignItems: "center",
             gap: 6,
             fontFamily: "var(--font-body)",
-            fontSize: "var(--text-body-sm)",
-            fontWeight: "var(--weight-medium)",
-            color: isLive ? "var(--color-signal-teal)" : "rgba(234,240,238,0.8)",
+            fontSize: "var(--text-body-sm, 13px)",
+            fontWeight: "600",
+            color: isLive ? "var(--color-signal-teal, #1E8A8A)" : "var(--color-ink, #0A2540)",
           }}
         >
           {isLive && (
@@ -98,7 +97,7 @@ function WellContextBar({ wellId, isLive, isSynthetic, simulationState, timestam
                 width: 7,
                 height: 7,
                 borderRadius: "50%",
-                background: "var(--color-signal-teal)",
+                background: "var(--color-signal-teal, #1E8A8A)",
                 animation: "livePulse 1.8s ease-in-out infinite",
                 flexShrink: 0,
               }}
@@ -112,9 +111,9 @@ function WellContextBar({ wellId, isLive, isSynthetic, simulationState, timestam
       <div style={{ marginLeft: "auto", textAlign: "right" }}>
         <div
           style={{
-            fontFamily: "var(--font-code)",
-            fontSize: "var(--text-data-sm)",
-            color: "rgba(234,240,238,0.55)",
+            fontFamily: "var(--font-body)",
+            fontSize: "var(--text-label-sm, 12px)",
+            color: "var(--color-body, #5B6B7A)",
           }}
         >
           {isLive && simTs ? "Sim clock" : "Selected"}
@@ -122,8 +121,9 @@ function WellContextBar({ wellId, isLive, isSynthetic, simulationState, timestam
         <div
           style={{
             fontFamily: "var(--font-code)",
-            fontSize: "var(--text-data-sm)",
-            color: WELL_BAR_TEXT,
+            fontSize: "var(--text-data-sm, 12px)",
+            fontWeight: "600",
+            color: "var(--color-ink, #0A2540)",
             marginTop: 1,
           }}
         >
@@ -339,7 +339,13 @@ export default function Overview() {
   const depthVal = null; // No verified depth channel per project docs
 
   return (
-    <div className="page">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="page"
+      style={{ gap: "14px" }}
+    >
       {/* Well Context Bar */}
       <WellContextBar
         wellId={selectedWell}
@@ -348,6 +354,7 @@ export default function Overview() {
         simulationState={simulationState}
         timestamp={latestTimestamp}
       />
+
 
       {/* Primary hero row: Risk Panel + 3D Viewport */}
       <div className="card-grid" style={{ alignItems: "center" }}>
@@ -491,6 +498,7 @@ export default function Overview() {
           <HistoricalContext historical={historical.data} />
         </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
+

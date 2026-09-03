@@ -12,6 +12,7 @@
  * Note: /wells/{id}/features endpoint exists in client.js — this page
  * uses M0.4-derived fields from /telemetry as the source of truth.
  */
+import { motion } from "framer-motion";
 import { api } from "../api/client.js";
 import { useApiResource } from "../api/hooks.js";
 import { useAppState } from "../app/AppState.jsx";
@@ -81,7 +82,14 @@ export default function Features() {
   const rows = measurementRows(current);
 
   return (
-    <div className="page">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="page"
+      style={{ gap: "14px" }}
+    >
+
       {/* Page header */}
       <div style={{ marginBottom: "var(--space-sm)" }}>
         <div style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-label-sm)", color: "var(--color-mute)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
@@ -174,6 +182,7 @@ export default function Features() {
 
       {/* Derived Features */}
       <FeaturePanel record={current} />
-    </div>
+    </motion.div>
   );
 }
+

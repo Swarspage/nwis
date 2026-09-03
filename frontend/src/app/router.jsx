@@ -8,6 +8,7 @@ import Overview from "../pages/Overview.jsx";
 import Replay from "../pages/Replay.jsx";
 import Risk from "../pages/Risk.jsx";
 import Telemetry from "../pages/Telemetry.jsx";
+import Guidance from "../pages/Guidance.jsx";
 
 export default function Router() {
   return (
@@ -19,6 +20,7 @@ export default function Router() {
         <Route path="intelligence" element={<Intelligence />} />
         <Route path="models" element={<Models />} />
         <Route path="risk" element={<Risk />} />
+        <Route path="guidance" element={<Guidance />} />
         <Route path="historical" element={<Historical />} />
         <Route path="replay" element={<Replay />} />
       </Route>
@@ -26,3 +28,4 @@ export default function Router() {
     </Routes>
   );
 }
+

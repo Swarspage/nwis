@@ -17,10 +17,12 @@
  * Replay has its own index/speed state, independent of simulation clock.
  */
 import { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { api } from "../api/client.js";
 import { useApiResource } from "../api/hooks.js";
 import { useAppState } from "../app/AppState.jsx";
 import { useFocusContext, FOCUS_TYPES } from "../components/ui/FocusContext.jsx";
+
 import RiskGauge from "../components/charts/RiskGauge.jsx";
 import RiskChart from "../components/charts/RiskChart.jsx";
 import TelemetryChart from "../components/charts/TelemetryChart.jsx";
@@ -199,7 +201,14 @@ export default function Replay() {
   const alertActive = snapshot.data?.risk?.alert === true;
 
   return (
-    <div className="page">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="page"
+      style={{ gap: "14px" }}
+    >
+
       {/* Page header */}
       <div style={{ marginBottom: "var(--space-sm)" }}>
         <div style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-label-sm)", color: "var(--color-mute)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
@@ -330,6 +339,7 @@ export default function Replay() {
           <ModelEvidence records={snapshot.data.models || []} prototype={snapshot.data.risk?.prototype_supervised} />
         </>
       )}
-    </div>
+    </motion.div>
   );
 }
+

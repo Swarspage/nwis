@@ -8,6 +8,8 @@ from .data_service import data_service
 from .replay_service import build_snapshot, get_historical_context
 
 from .simulation_service import simulation_clock
+from ml.guidance.engine import evaluate_guidance
+
 
 app = FastAPI(
     title="NWIS M0.9 API Backend",
@@ -243,3 +245,40 @@ def get_snapshot(well_id: str, timestamp: str):
             "models": models,
             "risk": risk
         }
+
+@app.get("/api/v1/wells/{well_id}/guidance/current")
+def get_current_guidance(well_id: str):
+    _validate_well(well_id)
+    if well_id == "WELL-1":
+        dataset = data_service.get_dataset(well_id, "risk")
+        if not dataset: raise NoDataError()
+        current_ts = dataset[-1]["timestamp"]
+    else:
+        current_ts = simulation_clock.get_current_time_iso()
+    
+    try:
+        snap = get_snapshot(well_id, current_ts)
+    except NoDataError:
+        snap = {"well_id": well_id, "timestamp": current_ts, "telemetry": {"telemetry_status": "EMPTY"}}
+    
+    guidance = evaluate_guidance(snap)
+    return guidance.model_dump()
+
+@app.get("/api/v1/wells/{well_id}/guidance")
+def get_guidance(well_id: str, timestamp: Optional[str] = None):
+    _validate_well(well_id)
+    if not timestamp:
+        return get_current_guidance(well_id)
+    
+    _validate_timestamp(timestamp)
+    ts = _clamp_to_sim_time(well_id, timestamp)
+    
+    try:
+        snap = get_snapshot(well_id, ts)
+    except NoDataError:
+        snap = {"well_id": well_id, "timestamp": ts, "telemetry": {"telemetry_status": "EMPTY"}}
+        
+    guidance = evaluate_guidance(snap)
+    return guidance.model_dump()
+
+

@@ -39,6 +39,10 @@ export const api = {
   snapshot: (timestamp, wellId = WELL_ID) => request(`/wells/${wellId}/snapshot`, { timestamp }),
   features: (params = {}, wellId = WELL_ID) => request(`/wells/${wellId}/features`, params),
   
+  // Guidance Engine
+  currentGuidance: (wellId = WELL_ID) => request(`/wells/${wellId}/guidance/current`),
+  guidanceAt: (timestamp, wellId = WELL_ID) => request(`/wells/${wellId}/guidance`, { timestamp }),
+  
   // Simulation
   simulationStatus: () => request("/simulation/status"),
   simulationControl: (params) => request("/simulation/control", {}, {

@@ -1,15 +1,14 @@
 import Badge from "../ui/Badge.jsx";
-import Card from "../ui/Card.jsx";
 import EmptyState from "../ui/EmptyState.jsx";
-import SectionHeader from "../ui/SectionHeader.jsx";
-import { formatValue, safeArray, titleize } from "../../utils/format.js";
+import { safeArray, titleize } from "../../utils/format.js";
+import { HiOutlineArrowUpRight } from "react-icons/hi2";
 import "./dashboard.css";
 
-function EvidenceItemCard({ item, index }) {
+function EvidenceItemCard({ item, index, onClick }) {
   if (typeof item !== "object" || item === null) {
     return (
-      <li className="evidence-item" key={`evidence-${index}`}>
-        <p className="evidence-copy">{String(item)}</p>
+      <li className="evidence-item-card-light" key={`evidence-${index}`} onClick={onClick}>
+        <p className="evidence-desc">{String(item)}</p>
       </li>
     );
   }
@@ -33,95 +32,72 @@ function EvidenceItemCard({ item, index }) {
 
   return (
     <li
-      className="evidence-item"
+      className="evidence-item-card-light"
       key={`${rawFeature}-${index}`}
-      style={{
-        background: "var(--color-surface-sunken)",
-        border: "1px solid var(--color-hairline)",
-        borderRadius: "var(--radius-md)",
-        padding: "10px 14px",
-        margin: "0 0 8px 0",
-        display: "flex",
-        flexDirection: "column",
-        gap: 6,
-      }}
+      onClick={onClick}
+      title="Click to view deep evidence inspection"
     >
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: "var(--text-body-sm)",
-            fontWeight: "var(--weight-semibold)",
-            color: "var(--color-ink)",
-          }}
-        >
-          {featureLabel}
-        </span>
-        {direction && (
-          <span
-            style={{
-              fontFamily: "var(--font-code)",
-              fontSize: "10px",
-              fontWeight: "var(--weight-medium)",
-              padding: "2px 8px",
-              borderRadius: "var(--radius-pill)",
-              background: isHigh ? "rgba(179,38,30,0.12)" : "rgba(30,138,138,0.12)",
-              color: isHigh ? "var(--color-rust)" : "var(--color-signal-teal)",
-              letterSpacing: "0.04em",
-            }}
-          >
-            {direction}
-          </span>
-        )}
+      <div className="evidence-item-header">
+        <span className="evidence-title-text">{featureLabel}</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          {direction && (
+            <span className={`evidence-badge ${isHigh ? "high" : "normal"}`}>
+              {direction}
+            </span>
+          )}
+          <HiOutlineArrowUpRight style={{ fontSize: 14, color: "var(--color-mute, #8C99A6)" }} />
+        </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 2 }}>
+      <div className="evidence-metrics-row">
         {contribution && (
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <span style={{ fontFamily: "var(--font-body)", fontSize: "11px", color: "var(--color-mute)" }}>
-              Contribution:
-            </span>
-            <span style={{ fontFamily: "var(--font-code)", fontSize: "11px", fontWeight: "var(--weight-medium)", color: "var(--color-ink)" }}>
-              {contribution}
-            </span>
+          <div className="metric-pill-item">
+            <span className="metric-pill-label">Contribution:</span>
+            <span className="metric-pill-val">{contribution}</span>
           </div>
         )}
 
         {zScore && (
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <span style={{ fontFamily: "var(--font-body)", fontSize: "11px", color: "var(--color-mute)" }}>
-              Z-score:
-            </span>
-            <span style={{ fontFamily: "var(--font-code)", fontSize: "11px", fontWeight: "var(--weight-medium)", color: isHigh ? "var(--color-rust)" : "var(--color-signal-teal)" }}>
+          <div className="metric-pill-item">
+            <span className="metric-pill-label">Z-Score:</span>
+            <span className="metric-pill-val" style={{ color: isHigh ? "var(--color-rust, #B3261E)" : "var(--color-signal-teal, #1E8A8A)" }}>
               {zScore}
             </span>
           </div>
         )}
       </div>
 
-      {item.explanation && (
-        <p style={{ fontFamily: "var(--font-body)", fontSize: "11px", color: "var(--color-body)", margin: "2px 0 0", lineHeight: 1.4 }}>
-          {item.explanation}
-        </p>
-      )}
+      {item.explanation && <p className="evidence-desc">{item.explanation}</p>}
     </li>
   );
 }
 
-export default function EvidenceSummary({ intelligence, risk }) {
+export default function EvidenceSummary({ intelligence, risk, onSelectEvidence }) {
   const evidence = safeArray(intelligence?.evidence || risk?.analytical_evidence?.m05?.evidence);
 
   return (
-    <Card style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <SectionHeader
-        title="M0.5 Deterministic Evidence"
-        description="Displayed as backend evidence, not translated into physical event labels."
-        action={<Badge>{titleize(intelligence?.intelligence_status || risk?.analytical_evidence?.m05?.level)}</Badge>}
-      />
+    <div className="dashboard-card-light" style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16 }}>
+        <div>
+          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "var(--color-ink, #0A2540)", fontFamily: "var(--font-display)" }}>
+            M0.5 Deterministic Evidence
+          </h3>
+          <p style={{ margin: "2px 0 0", fontSize: 12, color: "var(--color-body, #5B6B7A)" }}>
+            Displayed as backend evidence, not translated into physical event labels.
+          </p>
+        </div>
+        <Badge>{titleize(intelligence?.intelligence_status || risk?.analytical_evidence?.m05?.level)}</Badge>
+      </div>
+
       {evidence.length ? (
-        <ul className="evidence-list" style={{ listStyle: "none", padding: 0, margin: 0, flex: 1 }}>
+        <ul className="evidence-list" style={{ flex: 1 }}>
           {evidence.map((item, index) => (
-            <EvidenceItemCard item={item} index={index} key={index} />
+            <EvidenceItemCard
+              item={item}
+              index={index}
+              key={index}
+              onClick={() => onSelectEvidence && onSelectEvidence(item)}
+            />
           ))}
         </ul>
       ) : (
@@ -129,6 +105,6 @@ export default function EvidenceSummary({ intelligence, risk }) {
           The API returned an empty evidence array for the selected record.
         </EmptyState>
       )}
-    </Card>
+    </div>
   );
 }

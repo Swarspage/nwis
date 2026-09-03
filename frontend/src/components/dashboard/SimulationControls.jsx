@@ -1,5 +1,7 @@
 import { api } from "../../api/client.js";
 import { useAppState } from "../../app/AppState.jsx";
+import { HiPlay, HiPause, HiArrowPath, HiClock } from "react-icons/hi2";
+import "./dashboard.css";
 
 export default function SimulationControls() {
   const { selectedWell, simulationState } = useAppState();
@@ -23,34 +25,34 @@ export default function SimulationControls() {
     <div
       style={{
         position: "fixed",
-        bottom: "20px",
+        bottom: "24px",
         left: "50%",
         transform: "translateX(-50%)",
         zIndex: 999,
-        background: "rgba(15, 23, 42, 0.88)",
+        background: "linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(245, 247, 246, 0.96) 100%)",
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
-        border: "1px solid rgba(255, 255, 255, 0.12)",
-        borderRadius: "var(--radius-pill)",
-        padding: "6px 18px",
-        boxShadow: "0 12px 32px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.2)",
+        border: "1px solid var(--color-hairline, #DFE6E3)",
+        borderRadius: "9999px",
+        padding: "8px 20px",
+        boxShadow: "0 12px 36px rgba(10, 37, 64, 0.12), 0 2px 6px rgba(10, 37, 64, 0.04)",
         display: "flex",
         alignItems: "center",
-        gap: "var(--space-md)",
+        gap: "16px",
         maxWidth: "92vw",
-        transition: "all var(--motion-normal) var(--ease-standard)",
+        transition: "all 0.25s ease",
       }}
       className="simulation-dock"
     >
-      {/* Simulation status dot & badge */}
+      {/* Status Dot */}
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <span
           style={{
             width: 8,
             height: 8,
             borderRadius: "50%",
-            background: isPlaying ? "var(--color-signal-teal)" : "#f59e0b",
-            boxShadow: isPlaying ? "0 0 8px var(--color-signal-teal)" : "none",
+            background: isPlaying ? "#10b981" : "#f59e0b",
+            boxShadow: isPlaying ? "0 0 8px rgba(16, 185, 129, 0.5)" : "none",
             display: "inline-block",
             transition: "all 300ms",
           }}
@@ -59,9 +61,9 @@ export default function SimulationControls() {
           style={{
             fontFamily: "var(--font-body)",
             fontSize: "11px",
-            fontWeight: "var(--weight-semibold)",
-            color: "rgba(248, 250, 252, 0.85)",
-            letterSpacing: "0.04em",
+            fontWeight: 700,
+            color: "var(--color-ink, #0A2540)",
+            letterSpacing: "0.06em",
             textTransform: "uppercase",
             whiteSpace: "nowrap",
           }}
@@ -70,85 +72,77 @@ export default function SimulationControls() {
         </span>
       </div>
 
-      <div style={{ width: 1, height: 16, background: "rgba(255, 255, 255, 0.12)" }} />
+      <div style={{ width: 1, height: 18, background: "var(--color-hairline, #DFE6E3)" }} />
 
       {/* Play / Pause Toggle */}
       <button
+        type="button"
         onClick={() => control(isPlaying ? "pause" : "start")}
         style={{
-          display: "flex",
+          display: "inline-flex",
           alignItems: "center",
           gap: 6,
-          background: isPlaying ? "var(--color-signal-teal)" : "rgba(255, 255, 255, 0.12)",
-          color: "#ffffff",
-          border: "none",
-          borderRadius: "var(--radius-pill)",
-          padding: "5px 14px",
+          background: isPlaying ? "var(--color-signal-teal, #1E8A8A)" : "var(--color-surface-sunken, #F0F3F2)",
+          color: isPlaying ? "#ffffff" : "var(--color-ink, #0A2540)",
+          border: isPlaying ? "none" : "1px solid var(--color-hairline, #DFE6E3)",
+          borderRadius: "9999px",
+          padding: "6px 16px",
           fontFamily: "var(--font-body)",
-          fontSize: "var(--text-label-sm)",
-          fontWeight: "var(--weight-medium)",
+          fontSize: "12px",
+          fontWeight: 600,
           cursor: "pointer",
-          transition: "background var(--motion-fast) var(--ease-standard), transform var(--motion-fast) var(--ease-standard)",
+          transition: "all 0.2s ease",
+          boxShadow: isPlaying ? "0 2px 10px rgba(30, 138, 138, 0.3)" : "none",
         }}
-        className="button"
       >
-        {isPlaying ? (
-          <>
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
-              <rect x="1" y="1" width="3" height="8" rx="1" />
-              <rect x="6" y="1" width="3" height="8" rx="1" />
-            </svg>
-            Pause
-          </>
-        ) : (
-          <>
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
-              <polygon points="2,1 9,5 2,9" />
-            </svg>
-            Play
-          </>
-        )}
+        {isPlaying ? <HiPause style={{ fontSize: 14 }} /> : <HiPlay style={{ fontSize: 14 }} />}
+        <span>{isPlaying ? "Pause" : "Play"}</span>
       </button>
 
       {/* Reset Button */}
       <button
+        type="button"
         onClick={() => control("reset")}
         style={{
-          background: "rgba(255, 255, 255, 0.06)",
-          color: "rgba(248, 250, 252, 0.75)",
-          border: "1px solid rgba(255, 255, 255, 0.1)",
-          borderRadius: "var(--radius-pill)",
-          padding: "4px 12px",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 4,
+          background: "var(--color-surface-sunken, #F0F3F2)",
+          color: "var(--color-ink, #0A2540)",
+          border: "1px solid var(--color-hairline, #DFE6E3)",
+          borderRadius: "9999px",
+          padding: "5px 14px",
           fontFamily: "var(--font-body)",
-          fontSize: "var(--text-label-sm)",
-          fontWeight: "var(--weight-medium)",
+          fontSize: "12px",
+          fontWeight: 500,
           cursor: "pointer",
-          transition: "background var(--motion-fast) var(--ease-standard)",
+          transition: "all 0.2s ease",
         }}
-        className="button"
       >
-        Reset
+        <HiArrowPath style={{ fontSize: 13 }} />
+        <span>Reset</span>
       </button>
 
-      <div style={{ width: 1, height: 16, background: "rgba(255, 255, 255, 0.12)" }} />
+      <div style={{ width: 1, height: 18, background: "var(--color-hairline, #DFE6E3)" }} />
 
       {/* Speed Controls */}
       <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
         {[1, 5, 10, 60].map((s) => (
           <button
             key={s}
+            type="button"
             onClick={() => control("speed", { speed: s })}
             style={{
-              background: speed === s ? "rgba(255, 255, 255, 0.2)" : "transparent",
-              color: speed === s ? "#ffffff" : "rgba(248, 250, 252, 0.55)",
-              border: speed === s ? "1px solid rgba(255, 255, 255, 0.25)" : "1px solid transparent",
-              borderRadius: "var(--radius-sm)",
-              padding: "2px 7px",
+              background: speed === s ? "var(--color-signal-teal-soft, #E3F2F0)" : "transparent",
+              color: speed === s ? "var(--color-signal-teal, #1E8A8A)" : "var(--color-body, #5B6B7A)",
+              border: speed === s ? "1px solid rgba(30, 138, 138, 0.4)" : "1px solid transparent",
+              borderRadius: "6px",
+              padding: "3px 8px",
               fontFamily: "var(--font-code)",
               fontSize: "11px",
-              fontWeight: "var(--weight-medium)",
+              fontWeight: 600,
               cursor: "pointer",
-              transition: "all var(--motion-fast) var(--ease-standard)",
+              transition: "all 0.2s ease",
             }}
           >
             {s}×
@@ -158,13 +152,14 @@ export default function SimulationControls() {
 
       {/* Sim Clock readout */}
       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-        <div style={{ width: 1, height: 16, background: "rgba(255, 255, 255, 0.12)" }} />
+        <div style={{ width: 1, height: 18, background: "var(--color-hairline, #DFE6E3)" }} />
+        <HiClock style={{ color: "var(--color-signal-teal, #1E8A8A)", fontSize: 14 }} />
         <span
           style={{
             fontFamily: "var(--font-code)",
             fontSize: "12px",
-            color: "var(--color-signal-teal)",
-            fontWeight: "var(--weight-medium)",
+            color: "var(--color-signal-teal, #1E8A8A)",
+            fontWeight: 600,
             letterSpacing: "0.02em",
           }}
         >
