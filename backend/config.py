@@ -2,7 +2,7 @@ import os
 
 class Config:
     API_VERSION = "1.0.0"
-    CORS_ORIGINS = ["http://localhost", "http://localhost:3000", "http://localhost:8080"]
+    CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost,http://localhost:3000,http://localhost:8080,http://localhost:5173").split(",")
     
     DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
     PROCESSED_DIR = os.path.join(DATA_DIR, "processed")
