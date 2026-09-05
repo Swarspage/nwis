@@ -10,6 +10,14 @@ from .replay_service import build_snapshot, get_historical_context
 from .simulation_service import simulation_clock
 from ml.guidance.engine import evaluate_guidance
 
+import logging
+
+class EndpointFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        return record.getMessage().find("/api/v1/simulation/status") == -1
+
+logging.getLogger("uvicorn.access").addFilter(EndpointFilter())
+
 
 app = FastAPI(
     title="NWIS M0.9 API Backend",
